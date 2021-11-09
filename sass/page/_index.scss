@@ -1,0 +1,263 @@
+.main-header {
+    text-align: center;
+    padding: 3em 3em 0 3em;
+    color: $primary-color;
+    font-weight: 700;
+
+    img {
+        width: 50px;
+    }
+}
+
+.main-nav {
+    padding: 1em 3em;
+}
+
+.search-input {
+    width: 100%;
+    border-radius: 5px;
+    height: 60px;
+    padding: 1em;
+    background-color: $soft-grey;
+    border: none;
+    background-image: url(/images/loupe.png);
+    background-position: 99% 50%;
+    background-repeat: no-repeat;
+    background-size: 30px;
+    margin-bottom: 2em;
+}
+
+#select-inputs-container {
+    display: flex;
+    flex-flow: row;
+    position: absolute;
+}
+
+#Ingredients {
+    background-color:#3282F7;
+}
+
+#Appareil {
+    background-color:#68D9A4;
+}
+
+#Ustensiles {
+    background-color: #ED6454;
+}
+
+.input-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.expanded-list {
+    width: 700px!important;
+}
+
+#listIngredientsContainer, #listAppareilContainer , #listUstensilesContainer{
+    display: flex;
+    width: 100%;
+    flex-flow: row wrap;
+    justify-content: space-between;
+
+    li {
+        display: block;
+        width: 32%;
+        margin-bottom: 5px;
+    }    
+}
+.list-no-flex {
+    display: block!important;
+}
+
+
+.item-corresponding {
+    width: 100%!important;
+    word-wrap: break-word;
+    margin-bottom: 8px;
+}
+
+.add-margin-top {
+    margin-top: 1em;
+}
+
+#Ingredients, #Appareil, #Ustensiles {
+    width: fit-content;
+    color: white;
+    justify-content: space-between;
+    padding: 1.3em 1em;
+    width: 170px;
+    border-radius: 5px;
+    margin-right: 1em;
+    height: fit-content;
+    height: -moz-max-content;
+
+
+        input {
+           border: none;
+           background-color: transparent;
+           width: 80%;
+           color: white;
+           font-family: 'Lato', sans-serif;
+
+           &::placeholder {
+               font-size: 1.2em;
+               color: white;
+               font-family: 'Lato', sans-serif;
+           }
+
+           &:focus {
+               border: none;
+               outline: none;
+           }
+        }
+
+        .input-list-mode::placeholder {
+            color: rgba(255, 255, 255, 0.479);
+        }
+}
+
+.chevrons-container {
+    width: 20px;
+    position: relative;
+
+    img {
+        position: absolute;
+    }
+
+    .chevron-close {
+        display: none;
+    }
+
+    .chevron-display {
+        display: block;
+    }
+
+    .chevron-no-display {
+        display: none;
+    }
+}
+
+#recipes-cards-container {
+    padding: 0 3em;
+    display: grid;
+    grid-template-columns: repeat(3, 32%);
+    justify-content: space-between;
+    margin-top: 4em;
+
+}
+
+.card-recipe {
+    background-color: #E7E7E7;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 2em;
+}
+
+.recipe-img-container {
+ background-color: #C7BEBE;
+ height: 178px;
+
+}
+
+.recipe-text-container {
+    padding: 1em;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1em;
+
+    span {
+        display: flex;
+    }
+
+    h2 {
+        font-size: 1.2em;
+        width: 80%;
+        
+    }
+
+    img {
+        width: 15px;
+        height: 15px;
+        margin-right: 6px;
+    }
+}
+
+.body-card {
+    font-size: 0.9em;
+    display: flex;
+    justify-content: space-between;
+    height: 190px;
+
+    .description-recipe {
+        height: fit-content;
+        width: 48%;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 6;
+        -webkit-box-orient: vertical;
+  
+    }
+    ul {
+        width: 49%;
+    }
+}
+
+.item-list-clickable {
+    cursor: pointer;
+
+    &:hover {
+        opacity: 0.6;
+    } 
+}
+
+#render-search {
+    margin-bottom: 1.5em;
+    display: flex;
+}
+
+.IngredientsItemTag {
+    background-color: #3282F7;
+    color: white;
+    padding: 1em;
+    margin-right: 1em;
+    border-radius: 5px;
+    display: flex;
+    width: fit-content;
+    align-items: center;
+
+}
+
+.UstensilesItemTag {
+    background-color: #3282F7;
+    color: white;
+    padding: 1em;
+    margin-right: 1em;
+    border-radius: 5px;
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    background-color: #ED6454;
+}
+
+.AppareilItemTag {
+    background-color:#68D9A4;
+    color: white;
+    padding: 1em;
+    margin-right: 1em;
+    border-radius: 5px;
+    display: flex;
+    width: fit-content;
+    align-items: center;
+}
+
+ 
+.icone-delete {
+    width: 20px;
+    height: 20px;
+    margin-left: 8px;
+}
