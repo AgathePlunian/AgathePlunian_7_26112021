@@ -1,23 +1,30 @@
 class View {
   
-    constructor() {
+    constructor(recipesList) {
+        this.recipesList = recipesList;
         this.arrayIngredients = new Array();
         this.arrayUstensils = new Array();
         this.arrayAppareils = new Array();
+        
+        this.arrayIngredientsSelected = new Array();
+        this.arrayUstensilsSelected = new Array();
+        this.arrayAppareilsSelected = new Array();
+
+        this.arrayRecipesFiltered = new Array();
     }
 
-    showIndex(recipesList) {
-        this.getClearArrays(recipesList)
+    showIndex() {
+        this.getClearArrays()
         this.renderInputSearch();
-        this.renderRecipesCards(recipesList);
+        this.renderRecipesCards();
    }
 
    //TRI LES LISTES INGREDIENTS APPAREILS ET USTENSILES EN ENLEVANT LES DOUBLONS
-   getClearArrays(recipesList) {
+   getClearArrays() {
     //CLEAR INGREDIENTS ARRAY
     let allIngredientsList = [];
-    for(let i = 0; i < recipesList.length; i++) {
-        let eachArrayOfIngredients = recipesList[i].ingredients;
+    for(let i = 0; i < this.recipesList.length; i++) {
+        let eachArrayOfIngredients = this.recipesList[i].ingredients;
 
         for(let j = 0; j < eachArrayOfIngredients.length ; j ++) {
             allIngredientsList.push(eachArrayOfIngredients[j].ingredient)
@@ -27,15 +34,15 @@ class View {
 
     //CLEAR APPAREILS ARRAY
     let allAppareilsList = [];
-    for(let i = 0 ; i < recipesList.length; i++) {
-        allAppareilsList.push(recipesList[i].appliance);
+    for(let i = 0 ; i < this.recipesList.length; i++) {
+        allAppareilsList.push(this.recipesList[i].appliance);
     }
     this.arrayAppareils = [...new Set(allAppareilsList)];
 
     //CLEAR USTENSILS ARRAY
     let allUstensilsList = [];
-        for(let i = 0; i < recipesList.length; i++) {
-            let eachArrayOfUstensils = recipesList[i].ustensils;
+        for(let i = 0; i < this.recipesList.length; i++) {
+            let eachArrayOfUstensils = this.recipesList[i].ustensils;
 
             for(let j = 0; j < eachArrayOfUstensils.length ; j ++) {
                 allUstensilsList.push(eachArrayOfUstensils[j]);
@@ -47,22 +54,22 @@ class View {
 
 
    //AFFICHAGE DES CARDS DE RECETTES DE CUISINE
-    renderRecipesCards(recipesList) {
+    renderRecipesCards() {
         let cardsContainer = document.getElementById("recipes-cards-container");
        
-        for(let i = 0; i < recipesList.length; i++){
+        for(let i = 0; i < this.recipesList.length; i++){
             let cardRecipe = document.createElement("div");
             cardRecipe.classList.add("card-recipe");
             cardRecipe.innerHTML = `<div class="recipe-img-container"></div>
                                     <div class="recipe-text-container">
                                         <div class="card-header">
-                                            <h2>${recipesList[i].name}</h2>
-                                            <span><img src="images/time.png"><p class="text-bold">${recipesList[i].time} min</p></span>
+                                            <h2>${this.recipesList[i].name}</h2>
+                                            <span><img src="images/time.png"><p class="text-bold">${this.recipesList[i].time} min</p></span>
                                         </div>
                                         <div class="body-card">
                                             <ul class="card-list-ingredients"></ul>
                                                 <p class="description-recipe">
-                                                    ${recipesList[i].description}
+                                                    ${this.recipesList[i].description}
                                                 </p>
                                         </div>
                                     </div>`
@@ -70,19 +77,19 @@ class View {
             cardsContainer.appendChild(cardRecipe);
             let cardListIngredients = document.getElementsByClassName("card-list-ingredients");
            
-            for(let j = 0; j < recipesList[i].ingredients.length; j++) {
+            for(let j = 0; j < this.recipesList[i].ingredients.length; j++) {
                 let itemList = document.createElement('li');
                     
-                if((!recipesList[i].ingredients[j].unit) && (!recipesList[i].ingredients[j].quantity)) {
-                    itemList.innerHTML =  `<p><span class="text-bold">${recipesList[i].ingredients[j].ingredient}</span></p>`;
+                if((!this.recipesList[i].ingredients[j].unit) && (!this.recipesList[i].ingredients[j].quantity)) {
+                    itemList.innerHTML =  `<p><span class="text-bold">${this.recipesList[i].ingredients[j].ingredient}</span></p>`;
                 }
 
-                else if(!recipesList[i].ingredients[j].unit) {
-                    itemList.innerHTML =  `<p><span class="text-bold">${recipesList[i].ingredients[j].ingredient}: </span>${recipesList[i].ingredients[j].quantity}</p>`;
+                else if(!this.recipesList[i].ingredients[j].unit) {
+                    itemList.innerHTML =  `<p><span class="text-bold">${this.recipesList[i].ingredients[j].ingredient}: </span>${this.recipesList[i].ingredients[j].quantity}</p>`;
                 }
 
                 else {
-                    itemList.innerHTML =  `<p><span class="text-bold">${recipesList[i].ingredients[j].ingredient}: </span>${recipesList[i].ingredients[j].quantity} ${recipesList[i].ingredients[j].unit}</p>`;
+                    itemList.innerHTML =  `<p><span class="text-bold">${this.recipesList[i].ingredients[j].ingredient}: </span>${this.recipesList[i].ingredients[j].quantity} ${this.recipesList[i].ingredients[j].unit}</p>`;
                 }
 
                 cardListIngredients[i].appendChild(itemList);
@@ -215,7 +222,7 @@ class View {
         }
     }
 
-
+    
 
     //RECHERCHE DE LA LISTE DE MOTS COMPATIBLES AVEC LA VALEUR DE RECHERCHE
     searchAutoImplement(event) {
@@ -227,47 +234,33 @@ class View {
         divExpanded.classList.remove("expanded-list");
 
         if (idElementName == "Ustensiles") {             
-            listElementsContainer.innerHTML = "";          
-            let arrayCorrespondances = [];
-            for (let i = 0; i < this.arrayUstensils.length; i++) {
-                if(currentValue.length >= 1 ) {
-                    //RECHERCHE LES ITEMS DE LA LISTE QUI CORRESPONDENT AVEC LA VALEUR DE RECHERCHE
-                    if (this.arrayUstensils[i].substr(0, currentValue.length).toUpperCase() == currentValue.toUpperCase()) {
-                            arrayCorrespondances.push(this.arrayUstensils[i]);
-                        }   
-                }
-            }         
-            this.renderListAutoImplement(idElementName,arrayCorrespondances);        
+            this.searchByType(idElementName, this.arrayUstensils, listElementsContainer, currentValue);
         }
 
         if (idElementName == "Appareil") { 
-            listElementsContainer.innerHTML = "";
-            let arrayCorrespondances = [];
-            for (let i = 0; i <this.arrayAppareils.length; i++) {
-                if(currentValue.length >= 1 ) {
-                    //RECHERCHE LES ITEMS DE LA LISTE QUI CORRESPONDENT AVEC LA VALEUR DE RECHERCHE
-                    if (this.arrayAppareils[i].substr(0, currentValue.length).toUpperCase() == currentValue.toUpperCase()) {
-                        arrayCorrespondances.push(this.arrayAppareils[i]);
-                        }
-                }           
-            }  
-            this.renderListAutoImplement(idElementName,arrayCorrespondances);              
+            this.searchByType(idElementName, this.arrayAppareils, listElementsContainer, currentValue);
         }
 
         if (idElementName == "Ingredients") { 
-            listElementsContainer.innerHTML = ""; 
-            let arrayCorrespondances = [];
-            for (let i = 0; i <this.arrayIngredients.length; i++) {
-                if(currentValue.length >= 1 ) {
-                    //RECHERCHE LES ITEMS DE LA LISTE QUI CORRESPONDENT AVEC LA VALEUR DE RECHERCHE
-                    if (this.arrayIngredients[i].substr(0, currentValue.length).toUpperCase() == currentValue.toUpperCase()) {
-                            arrayCorrespondances.push(this.arrayIngredients[i]);
-                        }   
-                }                  
-            }  
-            this.renderListAutoImplement(idElementName,arrayCorrespondances);              
+            this.searchByType(idElementName, this.arrayIngredients, listElementsContainer, currentValue);           
         }
     }
+
+
+    searchByType(idElementName, array, listElementsContainer, currentValue) {   
+        listElementsContainer.innerHTML = "";          
+            let arrayCorrespondances = [];
+            for (let i = 0; i < array.length; i++) {
+                if(currentValue.length >= 1 ) {
+                    //RECHERCHE LES ITEMS DE LA LISTE QUI CORRESPONDENT AVEC LA VALEUR DE RECHERCHE
+                    if (array[i].substr(0, currentValue.length).toUpperCase() == currentValue.toUpperCase()) {
+                        arrayCorrespondances.push(array[i]);
+                    }   
+                }
+            }         
+        this.renderListAutoImplement(idElementName,arrayCorrespondances);     
+    }
+
 
     renderListAutoImplement(idElementName, arrayCorrespondances) {
         let idElement = idElementName;
@@ -279,21 +272,19 @@ class View {
         }
         else {
             for(let i = 0 ; i < arrayCorrespondances.length ; i++) {
-
-                    if(arrayCorrespondances.length != 0) {
-                        let item = document.createElement('li');
-                        item.innerHTML= arrayCorrespondances[i];
-                        item.classList.add("item-corresponding");
-                        item.classList.add("item-list-clickable")
-                        listElementsContainer.appendChild(item);
-                        listElementsContainer.classList.add("list-no-flex");
-                        listElementsContainer.classList.add("add-margin-top")
-                        
-                    }
-                    else {
-                        listElementsContainer.innerHTML = "";
-                        console.log(arrayCorrespondances.length)
-                    }
+                if(arrayCorrespondances.length != 0) {
+                    let item = document.createElement('li');
+                    item.innerHTML= arrayCorrespondances[i];
+                    item.classList.add("item-corresponding");
+                    item.classList.add("item-list-clickable")
+                    listElementsContainer.appendChild(item);
+                    listElementsContainer.classList.add("list-no-flex");
+                    listElementsContainer.classList.add("add-margin-top")
+                }
+                else {
+                    listElementsContainer.innerHTML = "";
+                    console.log(arrayCorrespondances.length)
+                }
             }
         }
 
@@ -302,32 +293,274 @@ class View {
             itemsListClickable[i].addEventListener('click' , (event) => {
                 this.addSearchTag(event);
             }); 
-        }
-        
+        }        
     }
    
-   
-
   
+ 
     //AJOUTE UN TAG SELON L'ITEM SELECTIONNÉ
-    addSearchTag(event) {        
-        let classNamePersonalize = event.target.parentNode.parentNode.parentNode.id+"ItemTag";
+    addSearchTag(event) {   
+        let idElement = event.target.parentNode.parentNode.parentNode.id;
+        let classNamePersonalize = idElement+"ItemTag";
         let tagsArea = document.getElementById("render-search");
         let tagText = event.target.textContent;
         let tag = document.createElement("span");
-        tag.innerHTML = ` ${tagText} <img src="images/close.png" alt ="delete" class="icone-delete">`;
-        tag.classList.add(classNamePersonalize);
-        tagsArea.appendChild(tag);
-        let btnsClose = document.getElementsByClassName("icone-delete");
+        
+        if(idElement == "Ustensiles") {
+            this.addSearchTagAndPushInArray(this.arrayUstensilsSelected, tag, tagText, tagsArea, classNamePersonalize);
+        }
 
+        if(idElement == "Appareil") {
+            this.addSearchTagAndPushInArray(this.arrayAppareilsSelected, tag, tagText, tagsArea, classNamePersonalize);
+        }
+
+        if(idElement == "Ingredients") {
+            this.addSearchTagAndPushInArray(this.arrayIngredientsSelected, tag, tagText, tagsArea, classNamePersonalize);
+            this.filterBy();
+        }
+        
+        let btnsClose = document.getElementsByClassName("icone-delete");
         for(let i = 0; i < btnsClose.length; i ++) {
             btnsClose[i].addEventListener('click', (event) => {
                 this.deleteTagSelected(event);
             });
         }
     }
+
+    addSearchTagAndPushInArray(array, tag, tagText, tagsArea, classNamePersonalize) {
+        if(!array.includes(tagText)) {
+            tag.innerHTML = `${tagText}<img src="images/close.png" alt ="delete" class="icone-delete">`;
+            tag.classList.add(classNamePersonalize);
+            tagsArea.appendChild(tag);
+            array.push(tagText);
+            //this.filterRecipesBy(tagText);
+         
+        }    
+
+       
+    }
+
     //SUPPRIMER LE TAG 
     deleteTagSelected(event) {
-       event.target.parentNode.remove();
+        let tagText = event.target.parentNode.textContent;
+        let className = event.target.parentNode.classList[0];
+
+        if(className == "UstensilesItemTag") {
+            if(this.arrayUstensilsSelected.includes(tagText)) {
+                this.arrayUstensilsSelected.splice(this.arrayUstensilsSelected.indexOf(tagText), 1);
+                console.log(this.arrayUstensilsSelected);  
+                event.target.parentNode.remove();  
+                
+            }
+        }
+
+        if(className == "AppareilItemTag") {
+            if(this.arrayAppareilsSelected.includes(tagText)) {
+                this.arrayAppareilsSelected.splice(this.arrayAppareilsSelected.indexOf(tagText), 1);
+                console.log(this.arrayAppareilsSelected);  
+                event.target.parentNode.remove();  
+                
+            }
+        }
+
+        if(className == "IngredientsItemTag") {
+            if(this.arrayIngredientsSelected.includes(tagText)) {
+                this.arrayIngredientsSelected.splice(this.arrayIngredientsSelected.indexOf(tagText), 1);
+                event.target.parentNode.remove();  
+                this.filterByDelete();
+                //this.filterRecipesByDelete(tagText);
+            }
+        }
     }
+    filterByDelete() {
+        
+    }
+
+    filterBy() {
+       console.log(this.arrayIngredientsSelected);
+        console.log(this.arrayRecipesFiltered);
+        if(this.arrayRecipesFiltered.length == 0) {
+            for (let i = 0 ; i <  this.arrayIngredientsSelected.length; i ++) {   
+                let isFound = false;
+        
+                for(let j = 0 ; j < this.recipesList.length; j ++) {
+                    for(let k = 0; k < this.recipesList[j].ingredients.length ; k ++) {
+                        
+                        if(this.recipesList[j].ingredients[k].ingredient == this.arrayIngredientsSelected[i]) {
+                            isFound = true;
+                            this.arrayRecipesFiltered.push(this.recipesList[j]);
+                            break;
+                        }   
+                    }
+                }
+            }
+        }
+
+        else {
+            for (let i = 0 ; i <  this.arrayRecipesFiltered.length; i++) {   
+                let isFound = true;
+                let arrIngredient = [];
+                for(let j = 0; j < this.arrayRecipesFiltered[i].ingredients.length ; j++) {
+                     arrIngredient.push(this.arrayRecipesFiltered[i].ingredients[j].ingredient);              
+                }
+
+                for (let k = 0 ; k < this.arrayIngredientsSelected.length; k++) { 
+                
+                     if(!arrIngredient.includes(this.arrayIngredientsSelected[k])) {
+                         isFound = false;
+                        break;                    
+                     }
+     
+                 }
+                   if(isFound == false) {
+                       this.arrayRecipesFiltered.splice([i], 1);
+                       i--;
+                   }
+
+                 
+            }
+           console.log(this.arrayRecipesFiltered);
+            console.log("///////");
+        }
+    }
+            /*
+            for (let i = 0 ; i <  this.arrayIngredientsSelected.length; i ++) {   
+                let isFound = false;
+        
+                for(let j = 0 ; j < this.arrayRecipesFiltered.length; j ++) {
+                    for(let k = 0; k < this.arrayRecipesFiltered[j].ingredients.length ; k ++) {
+                        
+                        if(this.arrayRecipesFiltered[j].ingredients[k].ingredient == this.arrayIngredientsSelected[i]) {
+                            
+                            isFound = true;
+                            break;
+                        }   
+                        if (isFound == true) {
+                            console.log(this.arrayRecipesFiltered[j]);
+                        }
+        
+                        else {          
+                            console.log("n'est pas présent")
+                            this.arrayRecipesFiltered.splice([j], 1);
+                        }
+                    }
+
+                   
+                }
+                
+                console.log(this.arrayRecipesFiltered);
+            }
+            */
+  
+
+
+    /*
+    filterRecipesByDelete(tagText) {
+        for(let i = 0 ; i < this.recipesList.length; i++) {
+            for(let j = 0 ; j < this.recipesList[i].ingredients.length ; j ++){
+                
+                if(this.recipesList[i].ingredients[j].ingredient.includes(tagText)) {
+                    this.arrayRecipesFiltered.push(this.recipesList[i]);
+                }            
+            }
+        }
+    }
+
+
+    filterRecipesBy(tagText) {
+
+        if(this.arrayRecipesFiltered.length == 0) {
+            for(let i = 0 ; i < this.recipesList.length; i++) {
+                for(let j = 0 ; j < this.recipesList[i].ingredients.length ; j ++){
+                    
+                    if(this.recipesList[i].ingredients[j].ingredient.includes(tagText)) {
+                        this.arrayRecipesFiltered.push(this.recipesList[i]);
+                    }            
+                }
+            }
+            console.log(this.arrayRecipesFiltered);
+        }
+
+        
+        else {
+            
+            for(let i = 0 ; i < this.arrayRecipesFiltered.length; i++) {
+                let isInArray = false;
+
+                for(let j = 0 ; j < this.arrayRecipesFiltered[i].ingredients.length ; j ++){             
+                    if(this.arrayRecipesFiltered[i].ingredients[j].ingredient == tagText) {
+                        isInArray = true;
+                    }                                           
+                }
+
+                if (isInArray == true) {
+                    console.log(this.arrayRecipesFiltered[i]);
+                    console.log("est présent");
+                    console.log(this.arrayRecipesFiltered);
+                }
+
+                else {          
+                    console.log(this.arrayRecipesFiltered[i]);
+                    console.log("n'est pas présent")
+                    this.arrayRecipesFiltered.splice([i], 1);
+                    console.log(this.arrayRecipesFiltered);
+                    i--; 
+                }
+            }
+            */
+            /*
+            for(let i = 0 ; i < this.arrayRecipesFiltered.length; i++) {
+                let newArray = [];
+                newArray.push(this.arrayRecipesFiltered[i].filter(ingredients => ingredients.ingredient == tagText));
+            }
+            */
+        
+
+        
+        //console.log(this.recipesList);
+        //console.log(this.arrayIngredientsSelected);
+    
+    
+        /*
+        if(this.arrayRecipesFiltered.length == 0) {
+            for(let i = 0 ; i < this.recipesList.length; i++) {
+                for(let j = 0 ; j < this.recipesList[i].ingredients.length ; j ++){
+                    if(this.recipesList[i].ingredients[j].ingredient.includes(tagText)) {
+                        this.arrayRecipesFiltered.push(this.recipesList[i]);
+                    }            
+                }
+            }
+            console.log(this.arrayRecipesFiltered);
+        }
+
+        
+        else {
+            console.log(tagText);
+            for(let i = 0 ; i < this.arrayRecipesFiltered.length; i++) {
+                for(let j = 0 ; j < this.arrayRecipesFiltered[i].ingredients.length ; j ++){
+                   if(!this.arrayRecipesFiltered[i].ingredients[j].ingredient.includes(tagText)) {
+                    console.log("okokok")   
+                    console.log(this.arrayRecipesFiltered[i]);
+                       break;
+                        //this.arrayRecipesFiltered.splice(this.arrayRecipesFiltered.indexOf(this.recipesList[i]), 1);
+                    }           
+                }
+            }
+            console.log(this.arrayRecipesFiltered);
+        }
+        */
+        
+        /*
+               let contains =  this.arrayIngredientsSelected.some(element => {
+                   return this.recipesList[i].ingredients.ingredient[j](element);
+               })
+               console.log(contains);
+                
+            }
+        */
+        
+        
+    
+        //let arrayFilterByIngredients = this.filter(word => word.length > 6)
+     
 }
