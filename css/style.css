@@ -116,7 +116,7 @@ p {
 }
 
 .expanded-list {
-  width: 700px !important;
+  width: 500px !important;
 }
 
 #listIngredientsContainer, #listAppareilContainer, #listUstensilesContainer {
@@ -150,7 +150,7 @@ p {
   color: white;
   justify-content: space-between;
   padding: 1.3em 1em;
-  width: 170px;
+  width: 155px;
   border-radius: 5px;
   margin-right: 1em;
   height: fit-content;
