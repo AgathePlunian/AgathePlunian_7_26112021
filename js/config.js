@@ -1,0 +1,1 @@
+const URL_DATA = './recipesData.json';
