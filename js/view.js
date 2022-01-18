@@ -25,25 +25,45 @@ class View {
    addSearchBarEvent() {
        let searchInput = document.getElementById("searchInput");
        searchInput.addEventListener('input' , (event) => {
-           if(event.target.value.length >= 3) {
-                this.searchBarFilter(event);
-           }
+          
+            this.searchBarFilter(event);
+          
         }); 
    }
 
    //FILTRE LES RECETTES SELON LA RECHERCHE PRINCIPALE AU BOUT DE 3 CARACTÈRES
    searchBarFilter(event) {
+    this.arrayRecipesFiltered = [...this.recipesList];
+    
+    if(event.target.value.length >= 3) {
+       console.log("plus grand que 2")
         let currentValueSearchBar = event.target.value;
-        let arrayCorrespondances = [];
-        for (let i = 0; i < this.arrayRecipesFiltered.length; i++) {
         
-            //RECHERCHE LES ITEMS DE LA LISTE QUI CORRESPONDENT AVEC LA VALEUR DE RECHERCHE
-            if (this.arrayRecipesFiltered[i].substr(0, currentValue.length).toUpperCase() == currentValueSearchBar.toUpperCase()) {
-                arrayCorrespondances.push(array[i]);
-            }   
-        
-        }    
-   }
+        for (let i = 0 ; i <  this.arrayRecipesFiltered.length; i++) {   
+            let isFound = false;
+            let arrIngredient = [];
+            for(let j = 0; j < this.arrayRecipesFiltered[i].ingredients.length ; j++) {
+                arrIngredient.push(this.arrayRecipesFiltered[i].ingredients[j].ingredient);              
+            }
+
+            for (let k = 0 ; k < arrIngredient.length; k++) { 
+                if (arrIngredient[k].substr(0, currentValueSearchBar.length).toUpperCase() == currentValueSearchBar.toUpperCase()) {
+                    isFound = true;
+                    break;                    
+                }
+            }
+
+            if(isFound != true) {
+                this.arrayRecipesFiltered.splice([i], 1);
+                i--;
+            }
+          
+        }
+    }
+    console.log(this.arrayRecipesFiltered.length)
+    this.renderRecipesCards(this.arrayRecipesFiltered);
+
+}
 
    //TRI LES LISTES INGREDIENTS APPAREILS ET USTENSILES EN ENLEVANT LES DOUBLONS
    getClearArrays(arrayRecipesList) {
@@ -305,14 +325,19 @@ class View {
     searchByType(idElementName, array, listElementsContainer, currentValue) {   
         listElementsContainer.innerHTML = "";          
             let arrayCorrespondances = [];
-            for (let i = 0; i < array.length; i++) {
+           
                 if(currentValue.length >= 1 ) {
                     //RECHERCHE LES ITEMS DE LA LISTE QUI CORRESPONDENT AVEC LA VALEUR DE RECHERCHE
-                    if (array[i].substr(0, currentValue.length).toUpperCase() == currentValue.toUpperCase()) {
-                        arrayCorrespondances.push(array[i]);
-                    }   
+                    array.find(element => {
+                        if (element.toUpperCase().includes(currentValue.toUpperCase())) {
+                            arrayCorrespondances.push(element);      
+                        }
+                    });
+                      
+                      console.log(arrayCorrespondances); // 👉️ hello
+                      
                 }
-            }         
+                    
         this.renderListAutoImplement(idElementName,arrayCorrespondances);     
     }
 
