@@ -1,0 +1,71 @@
+
+@media screen and (max-width:1024px) {
+
+    .main-header {
+        text-align: center;
+        padding: 3em 1.8em 0 1.8em;
+    }
+
+    .main-nav {
+        padding: 1em 1.8em;
+    }
+   
+    #recipes-cards-container {
+        padding: 0 1.8em;
+        grid-template-columns: repeat(2, 48%);  
+    }
+
+
+    #Ingredients, #Appareil, #Ustensiles {
+        padding: 1.3em 0.8em;
+        width: 140px;
+    }
+
+    .expanded-list {
+        width: 320px!important;
+    }
+    
+}
+
+@media screen and (max-width:767px) {
+
+    #Ingredients, #Appareil, #Ustensiles {
+        padding: 1.3em 0.8em;
+        width: 30%;
+    }
+    #recipes-cards-container {
+        padding: 0 2em;
+        display: block;
+    }
+
+    #Ingredients, #Appareil, #Ustensiles {
+        padding: 1em 0.5em;
+        margin-bottom: 1em;
+        margin-right: 9px;
+        
+    }
+
+    #select-inputs-container {
+
+        flex-flow: row wrap;
+        position: absolute;
+  
+    }
+
+    .chevrons-container {
+        width: 15px;
+    }
+
+    .expanded-list {
+       width: 30%;
+    }
+
+    .search-input {
+        margin-bottom: 0em;
+    }
+
+    .main-nav {
+        padding: 1em 1em;
+    }
+
+}

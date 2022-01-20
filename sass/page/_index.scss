@@ -25,6 +25,10 @@
     background-repeat: no-repeat;
     background-size: 30px;
     margin-bottom: 2em;
+
+    &::placeholder {
+        width: 90%;
+    }
 }
 
 #select-inputs-container {
@@ -104,6 +108,7 @@
                font-size: 1.2em;
                color: white;
                font-family: 'Lato', sans-serif;
+
            }
 
            &:focus {
