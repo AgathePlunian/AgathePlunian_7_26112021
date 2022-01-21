@@ -34,6 +34,7 @@ class View {
             allIngredientsList.push(eachArrayOfIngredients[j].ingredient)
         }
     }
+    
     this.arrayIngredients = [...new Set(allIngredientsList)];
 
     //CLEAR APPAREILS ARRAY
@@ -437,11 +438,27 @@ class View {
         this.filterBy();
     }
     
-    //SI LA SAISIE EST SUPÉRIEUR À 3 LETTRES
+    //IF LENGTH OF SEARCH IS LONGER THAN 3
 
     if(this.currentValueSearchBar.length >= 3) {
+        let arrIngredients = [];
+        let isIngredientFound = false;
 
-        for (let i = 0 ; i <  this.arrayRecipesFiltered.length; i++) {   
+        this.arrayRecipesFiltered.forEach(recipe => {
+
+            for(let i = 0; i < recipe.ingredients.length; i++ ) {
+                //console.log(recipe.ingredients[i].ingredient);   
+                if(recipe.ingredients[i].ingredient.toUpperCase().includes(this.currentValueSearchBar.toUpperCase())) {     
+                    isIngredientFound = true;     
+                    console.log(recipe);           
+                } 
+              
+            }   
+           
+        });
+      
+       
+       /*  for (let i = 0 ; i <  this.arrayRecipesFiltered.length; i++) {   
         
             let arrIngredient = [];
             for(let j = 0; j < this.arrayRecipesFiltered[i].ingredients.length ; j++) {
@@ -475,7 +492,7 @@ class View {
                 i --;
             }
         
-        }
+        } */
     }
     console.log(this.arrayRecipesFiltered.length);
     this.renderRecipesCards(this.arrayRecipesFiltered);
