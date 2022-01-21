@@ -424,89 +424,49 @@ class View {
 
     //FILTRE LES RECETTES SELON LA RECHERCHE PRINCIPALE AU BOUT DE 3 CARACTÈRES
     searchBarFilter() {
-
-    //SI L'UTILISATEUR EFFACE SA RECHECHE, LA RECHERCHE REPREND SUR LES FILTRES SÉLÉCTIONNÉS EN PARTANT DE L'ARRAY INITIALE
-    if(this.currentValueSearchBar.length == 0) {
-        this.arrayRecipesFiltered = [...this.recipesList];
-        this.isSearchBarUsed = false;
-        this.filterBy();
-    }
-
-
-    if(this.arrayUstensilsSelected.length > 0 || this.arrayAppareilsSelected.length > 0 || this.arrayIngredientsSelected > 0) {
-        this.arrayRecipesFiltered = [...this.recipesList];
-        this.filterBy();
-    }
     
-    //IF LENGTH OF SEARCH IS LONGER THAN 3
-
-    if(this.currentValueSearchBar.length >= 3) {
-        let arrIngredients = [];
-        let isIngredientFound = false;
-
-        this.arrayRecipesFiltered.forEach(recipe => {
-
-            for(let i = 0; i < recipe.ingredients.length; i++ ) {
-                //console.log(recipe.ingredients[i].ingredient);   
-                if(recipe.ingredients[i].ingredient.toUpperCase().includes(this.currentValueSearchBar.toUpperCase())) {     
-                    isIngredientFound = true;     
-                    console.log(recipe);           
-                } 
-              
-            }   
-           
-        });
-      
-       
-       /*  for (let i = 0 ; i <  this.arrayRecipesFiltered.length; i++) {   
         
-            let arrIngredient = [];
-            for(let j = 0; j < this.arrayRecipesFiltered[i].ingredients.length ; j++) {
-                arrIngredient.push(this.arrayRecipesFiltered[i].ingredients[j].ingredient);              
-            }
+        //SI L'UTILISATEUR EFFACE SA RECHERCHE, LA RECHERCHE REPREND SUR LES FILTRES SÉLÉCTIONNÉS EN PARTANT DE L'ARRAY INITIALE
+        if(this.currentValueSearchBar.length == 0) {
+            this.isSearchBarUsed = false;
+            this.arrayRecipesFiltered = [...this.recipesList];
+            this.filterBy();
+        }
 
-            //VERIFIE SI LA RECHERCHE CORRESPOND AUX RECETTES PARMIS SES INGRÉDIENTS
-            let isIngredientFound = false;
-            for (let k = 0 ; k < arrIngredient.length; k++) { 
-                if (arrIngredient[k].substr(0, this.currentValueSearchBar.length).toUpperCase() == this.currentValueSearchBar.toUpperCase()) {     
-                    isIngredientFound = true;       
-                    break;         
-                }
-            }
-
-            //VÉRIFIE SI LA RECHERCHE CORRESPOND À UN TITRE DE RECETTE
-            let isTitleFound = false;      
-            if (this.arrayRecipesFiltered[i].name.toUpperCase().includes(this.currentValueSearchBar.toUpperCase())) {
-                isTitleFound = true;  
-            }
-
-            //VÉRIFIE SI LA RECHERCHE CORRESPOND À UNE DESCRIPTION
-            let isDescriptionFound = false;      
-            if (this.arrayRecipesFiltered[i].description.toUpperCase().includes(this.currentValueSearchBar.toUpperCase())) {
-                isDescriptionFound = true;
-            }
-
-            //SI AUCUNE CORRESPONDANCE N'EST TROUVÉE PARMI LES INGRDIENTS, LE TITRE ET LA DESCRIPTION ON ENLÈVE LA RECETTE DE L'ARRAY
-            if(isIngredientFound == false && isTitleFound == false && isDescriptionFound == false) {
-                this.arrayRecipesFiltered.splice([i], 1);
-                i --;
-            }
+        // IF A TAG IS ALREADY SELECTED
+        if(this.arrayUstensilsSelected.length > 0 || this.arrayAppareilsSelected.length > 0 || this.arrayIngredientsSelected > 0) {
+            this.arrayRecipesFiltered = [...this.recipesList];
+            this.filterBy();
+        }
         
-        } */
-    }
-    console.log(this.arrayRecipesFiltered.length);
-    this.renderRecipesCards(this.arrayRecipesFiltered);
+        //IF LENGTH OF SEARCH IS LONGER THAN 3
 
+        if(this.currentValueSearchBar.length >= 3) {
+            let word = this.currentValueSearchBar;
+            console.log(word);
+            this.arrayRecipesFiltered = this.arrayRecipesFiltered.filter(function(currentElement) {
+                return currentElement.name.toLowerCase().includes(word)||
+                currentElement.description.toLowerCase().includes(word)||
+                currentElement.ingredients.find(el => {
+                    return (el.ingredient).toLowerCase().includes(word)   
+                });
+            });
+            
+            console.log(this.arrayRecipesFiltered);
+            this.renderRecipesCards(this.arrayRecipesFiltered);
+
+          }
     }
-  
+
+
 
     //FITRES LES RECETTES SELON LES ITEMS SELECTIONNÉS
     filterBy() {
-        //PERMET DE REMETTRE LA LISTE DES RECETTES À 0 
+      /*   //PERMET DE REMETTRE LA LISTE DES RECETTES À 0 
         if(this.isSearchBarUsed == false) {
             this.arrayRecipesFiltered = [...this.recipesList];
-        }
-     
+        } */
+      
         //FILTER BY INGREDIENTS
         for (let i = 0 ; i <  this.arrayRecipesFiltered.length; i++) {   
             let isFound = true;
