@@ -60,48 +60,57 @@ class View {
 
    //RENDER RECIPIES CARDS ON PAGE
     renderRecipesCards(arrayRecipes) {
-        
+      
         let cardsContainer = document.getElementById("recipes-cards-container");
+        let noMatch = document.getElementById("no-match-message");
         cardsContainer.innerHTML="";
-       
-        for(let i = 0; i < arrayRecipes.length; i++){
-            let cardRecipe = document.createElement("div");
-            cardRecipe.classList.add("card-recipe");
-            cardRecipe.innerHTML = `<div class="recipe-img-container"></div>
-                                    <div class="recipe-text-container">
-                                        <div class="card-header">
-                                            <h2>${arrayRecipes[i].name}</h2>
-                                            <span><img src="images/time.png"><p class="text-bold">${arrayRecipes[i].time} min</p></span>
-                                        </div>
-                                        <div class="body-card">
-                                            <ul class="card-list-ingredients"></ul>
-                                                <p class="description-recipe">
-                                                    ${arrayRecipes[i].description}
-                                                </p>
-                                        </div>
-                                    </div>`
+        noMatch.innerHTML="";
 
-            cardsContainer.appendChild(cardRecipe);
-            let cardListIngredients = document.getElementsByClassName("card-list-ingredients");
-           
-            for(let j = 0; j < arrayRecipes[i].ingredients.length; j++) {
-                let itemList = document.createElement('li');
-                    
-                if((!arrayRecipes[i].ingredients[j].unit) && (!arrayRecipes[i].ingredients[j].quantity)) {
-                    itemList.innerHTML =  `<p><span class="text-bold">${arrayRecipes[i].ingredients[j].ingredient}</span></p>`;
-                }
-
-                else if(!arrayRecipes[i].ingredients[j].unit) {
-                    itemList.innerHTML =  `<p><span class="text-bold">${arrayRecipes[i].ingredients[j].ingredient}: </span>${arrayRecipes[i].ingredients[j].quantity}</p>`;
-                }
-
-                else {
-                    itemList.innerHTML =  `<p><span class="text-bold">${arrayRecipes[i].ingredients[j].ingredient}: </span>${arrayRecipes[i].ingredients[j].quantity} ${arrayRecipes[i].ingredients[j].unit}</p>`;
-                }
-
-                cardListIngredients[i].appendChild(itemList);
-            }                               
+        if(arrayRecipes.length == 0) {
+            noMatch.innerHTML = `<p>Aucune recette ne correspond à votre critère… vous pouvez chercher « tarte aux pommes », « poisson », etc.</p>`
         }
+       
+        else {
+            for(let i = 0; i < arrayRecipes.length; i++){
+                let cardRecipe = document.createElement("div");
+                cardRecipe.classList.add("card-recipe");
+                cardRecipe.innerHTML = `<div class="recipe-img-container"></div>
+                                        <div class="recipe-text-container">
+                                            <div class="card-header">
+                                                <h2>${arrayRecipes[i].name}</h2>
+                                                <span><img src="images/time.png"><p class="text-bold">${arrayRecipes[i].time} min</p></span>
+                                            </div>
+                                            <div class="body-card">
+                                                <ul class="card-list-ingredients"></ul>
+                                                    <p class="description-recipe">
+                                                        ${arrayRecipes[i].description}
+                                                    </p>
+                                            </div>
+                                        </div>`
+    
+                cardsContainer.appendChild(cardRecipe);
+                let cardListIngredients = document.getElementsByClassName("card-list-ingredients");
+               
+                for(let j = 0; j < arrayRecipes[i].ingredients.length; j++) {
+                    let itemList = document.createElement('li');
+                        
+                    if((!arrayRecipes[i].ingredients[j].unit) && (!arrayRecipes[i].ingredients[j].quantity)) {
+                        itemList.innerHTML =  `<p><span class="text-bold">${arrayRecipes[i].ingredients[j].ingredient}</span></p>`;
+                    }
+    
+                    else if(!arrayRecipes[i].ingredients[j].unit) {
+                        itemList.innerHTML =  `<p><span class="text-bold">${arrayRecipes[i].ingredients[j].ingredient}: </span>${arrayRecipes[i].ingredients[j].quantity}</p>`;
+                    }
+    
+                    else {
+                        itemList.innerHTML =  `<p><span class="text-bold">${arrayRecipes[i].ingredients[j].ingredient}: </span>${arrayRecipes[i].ingredients[j].quantity} ${arrayRecipes[i].ingredients[j].unit}</p>`;
+                    }
+    
+                    cardListIngredients[i].appendChild(itemList);
+                }                               
+            }
+        }
+      
     }
 
     //RENDER INGREDIENTS, APPLIANCE ET USTENSILS SEARCH INPUT
@@ -114,8 +123,6 @@ class View {
 
             let inputTemplate = document.createElement("div");
             inputTemplate.setAttribute("id",inputsName[i]);
-
-
             inputTemplate.innerHTML = `<div class="input-container">
                                             <input class="inputsSearch" id="input-${inputsName[i]}" placeholder="${inputsName[i]}">
                                             <div class="chevrons-container" id="chevrons-container-${inputsName[i]}">
@@ -286,7 +293,6 @@ class View {
         }
     }
   
-
     //RENDER LIST OF AUTOIMPLEMENTED RESULT IN SEARCH INPUT
     searchAutoImplement(event) {
         let currentValue = event.target.value;
@@ -397,7 +403,7 @@ class View {
     //ADD ITEM CHOSEN IN CORRESPONDING ARRAY (USTENSILS SELECTED, APPAREILS SELECTED AND INGREDIENTS SELECTED)
     addSearchTagAndPushInArray(array, tag, tagText, tagsArea, classNamePersonalize) {
         if(!array.includes(tagText)) {
-            tag.innerHTML = `${tagText}<img src="images/close.png" alt ="delete" class="icone-delete">`;
+            tag.innerHTML = `${tagText}<img src="images/close.png" alt="delete" class="icone-delete">`;
             tag.classList.add(classNamePersonalize);
             tagsArea.appendChild(tag);
             array.push(tagText);
@@ -444,62 +450,58 @@ class View {
     addSearchBarEvent() {
         let searchInput = document.getElementById("searchInput");
         searchInput.addEventListener('input' , (event) => {
-            this.currentValueSearchBar = event.target.value;
+            this.currentValueSearchBar = event.target.value.toLowerCase();
             this.searchBarFilter();
             this.isSearchBarUsed = true;
         });
     }
 
+/*
+    //FILTER RECIPES FROM PRINCIPAL SEARCH BAR STARTING FROM 3 CHARACTERS
 
-   /*  searchBarFilter() {
-
+     searchBarFilter() {
+        
+        //RESET ALL RECIPES WHEN NO TAG IS SELECTED (IN CASE OF RETAPING SEARCH WITHOUT ALL DELETING IN SEARCH BAR)
         if(this.arrayUstensilsSelected.length == 0 || this.arrayAppareilsSelected.length == 0 || this.arrayIngredientsSelected == 0) {
             this.arrayRecipesFiltered = [...this.recipesList];
         }
-        //SI L'UTILISATEUR EFFACE SA RECHECHE, LA RECHERCHE REPREND SUR LES FILTRES SÉLÉCTIONNÉS EN PARTANT DE L'ARRAY INITIALE
+        
+        //RESET ALL RECIPES IF USER DELETE ALL HIS SEARCH, START BY FILTERING BY SELECTED TAGS
         if(this.currentValueSearchBar.length == 0) {
             this.arrayRecipesFiltered = [...this.recipesList];
-            this.filterByTags();
+            if(this.arrayUstensilsSelected.length > 0 || this.arrayAppareilsSelected.length > 0 || this.arrayIngredientsSelected > 0) {
+                this.filterByTags();
+            }
         }
-
-
+        
+        // START BY FILTERING BY TAGS IF SOME TAGS ARE ALREADY SELECTED
         if(this.arrayUstensilsSelected.length > 0 || this.arrayAppareilsSelected.length > 0 || this.arrayIngredientsSelected > 0) {
             this.arrayRecipesFiltered = [...this.recipesList];
             this.filterByTags();
         }
         
-        //SI LA SAISIE EST SUPÉRIEUR À 3 LETTRES
-
+      
+      //FILTER ARRAY ALREADY FILTERED BY TAG WHEN USER HAS WRITTEN 3 CHARACTERS
         if(this.currentValueSearchBar.length >= 3) {
-
             for (let i = 0 ; i <  this.arrayRecipesFiltered.length; i++) {   
-            
-                let arrIngredient = [];
+                
+                let isIngredientFound = false;       
                 for(let j = 0; j < this.arrayRecipesFiltered[i].ingredients.length ; j++) {
-                    arrIngredient.push(this.arrayRecipesFiltered[i].ingredients[j].ingredient);              
-                }
-
-                //VERIFIE SI LA RECHERCHE CORRESPOND AUX RECETTES PARMIS SES INGRÉDIENTS
-                let isIngredientFound = false;
-                for (let k = 0 ; k < arrIngredient.length; k++) { 
-                    if (arrIngredient[k].substr(0, this.currentValueSearchBar.length).toUpperCase() == this.currentValueSearchBar.toUpperCase()) {     
+                    if ( this.arrayRecipesFiltered[i].ingredients[j].ingredient.toLowerCase().includes(this.currentValueSearchBar)) {    
                         isIngredientFound = true;       
-                        break;         
+                        break;                    
                     }
                 }
-
-                //VÉRIFIE SI LA RECHERCHE CORRESPOND À UN TITRE DE RECETTE
+                //CHECK IF RECIPE'S NAME MATCH WITH SEARCH
                 let isTitleFound = false;      
-                if (this.arrayRecipesFiltered[i].name.toUpperCase().includes(this.currentValueSearchBar.toUpperCase())) {
+                if (this.arrayRecipesFiltered[i].name.toLowerCase().includes(this.currentValueSearchBar)) {
                     isTitleFound = true;  
                 }
-
-                //VÉRIFIE SI LA RECHERCHE CORRESPOND À UNE DESCRIPTION
+                //CHECK IF RECIPE'S DESCRITPION MATCH WITH SEARCH
                 let isDescriptionFound = false;      
-                if (this.arrayRecipesFiltered[i].description.toUpperCase().includes(this.currentValueSearchBar.toUpperCase())) {
+                if (this.arrayRecipesFiltered[i].description.toLowerCase().includes(this.currentValueSearchBar)) {
                     isDescriptionFound = true;
                 }
-
                 //SI AUCUNE CORRESPONDANCE N'EST TROUVÉE PARMI LES INGRDIENTS, LE TITRE ET LA DESCRIPTION ON ENLÈVE LA RECETTE DE L'ARRAY
                 if(isIngredientFound == false && isTitleFound == false && isDescriptionFound == false) {
                     this.arrayRecipesFiltered.splice([i], 1);
@@ -514,11 +516,14 @@ class View {
 
     } */
 
-    //FILTER RECIPES FROM PRINCIPAL SEARCH BAR STARTING FROM 3 CHARACTERS
 
+    // SECOND IMPLEMENTATION -> FASTER
+
+    //FILTER RECIPES FROM PRINCIPAL SEARCH BAR STARTING FROM 3 CHARACTERS
+    
     searchBarFilter() {
 
-        //RESET ALL RECIPES WHEN NO TAG IS SELECTED (IN CASE OF RETAPING SEARCH WITHOUT ALL DELETING IN SEARCH ABR)
+        //RESET ALL RECIPES WHEN NO TAG IS SELECTED (IN CASE OF RETAPING SEARCH WITHOUT ALL DELETING IN SEARCH BAR)
         if(this.arrayUstensilsSelected.length == 0 && this.arrayAppareilsSelected.length == 0 && this.arrayIngredientsSelected == 0) {
             this.arrayRecipesFiltered = [...this.recipesList];
         }
@@ -557,7 +562,7 @@ class View {
 
 
 
-    //FITRES LES RECETTES SELON LES ITEMS SELECTIONNÉS
+    //FILTER RECIPES BY SELECTED TAGS
     filterByTags() {
       
         //FILTER BY INGREDIENTS
