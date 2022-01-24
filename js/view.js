@@ -10,7 +10,6 @@ class View {
         this.arrayUstensilsSelected = new Array();
         this.arrayAppareilsSelected = new Array();
         this.arrayRecipesFiltered =  [...this.recipesList];
-        this.isSearchBarUsed = false;
         this.currentValueSearchBar = "";
     }
 
@@ -118,9 +117,9 @@ class View {
 
             inputTemplate.innerHTML = `<div class="input-container">
                                             <input class="inputsSearch" id="input${inputsName[i]}" placeholder="${inputsName[i]}">
-                                            <div class="chevrons-container">
-                                                <img class="chevron-open" src="/images/fleche-down-white.png" alt="Open search ${inputsName[i]}">
-                                                <img class="chevron-close" src="/images/fleche-up-white.png" alt="Close search ${inputsName[i]}">
+                                            <div class="chevrons-container" id="chevrons-container-${inputsName[i]}">
+                                                <img class="chevron-open id="chevron-open-${inputsName[i]}" src="/images/fleche-down-white.png" alt="Open search ${inputsName[i]}">
+                                                <img class="chevron-close" id="chevron-close-${inputsName[i]}" src="/images/fleche-up-white.png" alt="Close search ${inputsName[i]}">
                                             </div>
                                         </div>
                                         <div><ul id="list${inputsName[i]}Container"></ul></div>
@@ -220,6 +219,27 @@ class View {
     }
 
 
+    closeSelect(chevronOpen, chevronClose, divInputChosen, listElementsContainer, input, idElement) {
+        chevronOpen.classList.remove("chevron-no-display");
+        chevronClose.classList.remove("chevron-display");
+        divInputChosen.classList.remove("expanded-list");
+        listElementsContainer.classList.remove("add-margin-top");
+        listElementsContainer.innerHTML = "";
+        input.classList.remove("input-list-mode");
+        input.placeholder = idElement;
+    }
+
+    openSelect(chevronOpen, chevronClose, divInputChosen, listElementsContainer, input, idElement){
+        chevronOpen.classList.add("chevron-no-display");
+        chevronClose.classList.add("chevron-display");      
+        divInputChosen.classList.add("expanded-list");
+        listElementsContainer.classList.add("add-margin-top");
+        input.classList.add("input-list-mode"); 
+        this.getClearArrays(this.arrayRecipesFiltered);     
+        this.renderListByElement(idElement, listElementsContainer, input);
+
+    } 
+
      //GÈRE L'OUVERTURE ET LA FERMETURE DES INPUTS DE RECHERCHES INGREDIENTS, APPAREILS ET USTENSILES
      handleSelect(event, i) {
         let chevronOpen = document.getElementsByClassName("chevron-open")[i];
@@ -230,31 +250,15 @@ class View {
         listElementsContainer.classList.remove("list-no-flex");
         let input = event.target.parentNode.parentNode.children[0];
         let divInputChosen = document.getElementById(idElement);
-        
 
         //FERME LE MENU SELECT
         if(chevronClose.classList.contains("chevron-display")) {
-            chevronOpen.classList.remove("chevron-no-display");
-            chevronClose.classList.remove("chevron-display");
-            divInputChosen.classList.remove("expanded-list");
-
-            //EFFACE LA LISTE
-            listElementsContainer.classList.remove("add-margin-top");
-            listElementsContainer.innerHTML = "";
-            input.classList.remove("input-list-mode");
-            input.placeholder = idElement;
+           this.closeSelect(chevronOpen, chevronClose, divInputChosen, listElementsContainer, input , idElement)
         }
         
         //OUVRE LE MENU SELECT
-        else {
-       
-        chevronOpen.classList.add("chevron-no-display");
-        chevronClose.classList.add("chevron-display");      
-        divInputChosen.classList.add("expanded-list");
-        listElementsContainer.classList.add("add-margin-top");
-        input.classList.add("input-list-mode"); 
-        this.getClearArrays(this.arrayRecipesFiltered);     
-        this.renderListByElement(idElement, listElementsContainer, input);
+        else {  
+           this.openSelect(chevronOpen, chevronClose, divInputChosen, listElementsContainer, input, idElement)
         }
     }
   
@@ -344,17 +348,17 @@ class View {
         
         if(idElement == "Ustensiles") {
             this.addSearchTagAndPushInArray(this.arrayUstensilsSelected, tag, tagText, tagsArea, classNamePersonalize);
-            this.filterBy();
+            this.filterByTags();
         }
 
         if(idElement == "Appareil") {
             this.addSearchTagAndPushInArray(this.arrayAppareilsSelected, tag, tagText, tagsArea, classNamePersonalize);
-            this.filterBy();
+            this.filterByTags();
         }
 
         if(idElement == "Ingredients") {
             this.addSearchTagAndPushInArray(this.arrayIngredientsSelected, tag, tagText, tagsArea, classNamePersonalize);
-            this.filterBy();
+            this.filterByTags();
         }
         
         //AJOUT DE L'EVENLISTENER SI ON SUPPRIME UN TAG QUI APPEL LA FONCTION DELETETAGSELECTED
@@ -388,7 +392,7 @@ class View {
                 this.arrayUstensilsSelected.splice(this.arrayUstensilsSelected.indexOf(tagText), 1);
                 event.target.parentNode.remove();         
                 this.searchBarFilter();
-                this.filterBy();
+                this.filterByTags();
                 
             }
         }
@@ -398,7 +402,7 @@ class View {
                 this.arrayAppareilsSelected.splice(this.arrayAppareilsSelected.indexOf(tagText), 1);
                 event.target.parentNode.remove();  
                 this.searchBarFilter();
-                this.filterBy();
+                this.filterByTags();
             }
         }
 
@@ -407,7 +411,7 @@ class View {
                 this.arrayIngredientsSelected.splice(this.arrayIngredientsSelected.indexOf(tagText), 1);
                 event.target.parentNode.remove();  
                 this.searchBarFilter();
-                this.filterBy();
+                this.filterByTags();
             }
         }
     }
@@ -424,19 +428,23 @@ class View {
 
     //FILTRE LES RECETTES SELON LA RECHERCHE PRINCIPALE AU BOUT DE 3 CARACTÈRES
     searchBarFilter() {
+
+        if(this.arrayUstensilsSelected.length == 0 && this.arrayAppareilsSelected.length == 0 && this.arrayIngredientsSelected == 0) {
+            this.arrayRecipesFiltered = [...this.recipesList];
+            this.filterByTags();
+        }
     
-        
         //SI L'UTILISATEUR EFFACE SA RECHERCHE, LA RECHERCHE REPREND SUR LES FILTRES SÉLÉCTIONNÉS EN PARTANT DE L'ARRAY INITIALE
         if(this.currentValueSearchBar.length == 0) {
             this.isSearchBarUsed = false;
             this.arrayRecipesFiltered = [...this.recipesList];
-            this.filterBy();
+            this.filterByTags();
         }
 
         // IF A TAG IS ALREADY SELECTED
         if(this.arrayUstensilsSelected.length > 0 || this.arrayAppareilsSelected.length > 0 || this.arrayIngredientsSelected > 0) {
             this.arrayRecipesFiltered = [...this.recipesList];
-            this.filterBy();
+            this.filterByTags();
         }
         
         //IF LENGTH OF SEARCH IS LONGER THAN 3
@@ -461,11 +469,7 @@ class View {
 
 
     //FITRES LES RECETTES SELON LES ITEMS SELECTIONNÉS
-    filterBy() {
-      /*   //PERMET DE REMETTRE LA LISTE DES RECETTES À 0 
-        if(this.isSearchBarUsed == false) {
-            this.arrayRecipesFiltered = [...this.recipesList];
-        } */
+    filterByTags() {
       
         //FILTER BY INGREDIENTS
         for (let i = 0 ; i <  this.arrayRecipesFiltered.length; i++) {   
