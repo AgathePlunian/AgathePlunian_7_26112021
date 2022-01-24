@@ -330,45 +330,36 @@ p {
   }
 
   .expanded-list {
-    width: 320px !important;
+    width: 370px !important;
   }
 }
 @media screen and (max-width: 767px) {
+  #select-inputs-container {
+    display: block;
+    position: static;
+    margin-bottom: 6px;
+  }
+
   #Ingredients, #Appareil, #Ustensiles {
-    padding: 1.3em 0.8em;
-    width: 30%;
+    padding: 1.3em 1em;
+    width: 100%;
+    margin-bottom: 0.9em;
   }
 
   #recipes-cards-container {
-    padding: 0 2em;
     display: block;
   }
 
-  #Ingredients, #Appareil, #Ustensiles {
-    padding: 1em 0.5em;
-    margin-bottom: 1em;
-    margin-right: 9px;
-  }
-
-  #select-inputs-container {
-    flex-flow: row wrap;
-    position: absolute;
-  }
-
-  .chevrons-container {
-    width: 15px;
-  }
-
   .expanded-list {
-    width: 30%;
+    width: 100% !important;
   }
 
   .search-input {
     margin-bottom: 1em;
   }
 
-  .main-nav {
-    padding: 1em 1em;
+  #recipes-cards-container {
+    margin-top: 1em;
   }
 }
 

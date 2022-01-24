@@ -21,7 +21,8 @@ class View {
    }
 
   
-   //TRI LES LISTES INGREDIENTS APPAREILS ET USTENSILES EN ENLEVANT LES DOUBLONS
+
+   //FILTER INGREDIENTS, APPLIANCE AND USTENSILS ARRAY BY UNIQ VALUE
    getClearArrays(arrayRecipesList) {
     
     //CLEAR INGREDIENTS ARRAY
@@ -34,14 +35,14 @@ class View {
         }
     }
     
-    this.arrayIngredients = [...new Set(allIngredientsList)];
+    this.arrayIngredients = [...new Set(allIngredientsList)].sort();
 
     //CLEAR APPAREILS ARRAY
     let allAppareilsList = [];
     for(let i = 0 ; i < arrayRecipesList.length; i++) {
         allAppareilsList.push(arrayRecipesList[i].appliance);
     }
-    this.arrayAppareils = [...new Set(allAppareilsList)];
+    this.arrayAppareils = [...new Set(allAppareilsList)].sort();
 
     //CLEAR USTENSILS ARRAY
     let allUstensilsList = [];
@@ -52,12 +53,12 @@ class View {
                 allUstensilsList.push(eachArrayOfUstensils[j]);
             }
         }
-        this.arrayUstensils = [...new Set(allUstensilsList)];
+        this.arrayUstensils = [...new Set(allUstensilsList)].sort();
 
 }
 
 
-   //AFFICHAGE DES CARDS DE RECETTES DE CUISINE
+   //RENDER RECIPIES CARDS ON PAGE
     renderRecipesCards(arrayRecipes) {
         
         let cardsContainer = document.getElementById("recipes-cards-container");
@@ -103,7 +104,7 @@ class View {
         }
     }
 
-    //AFFICHAGE DES BOUTONS DE RECHERCHES INGREDIENTS, APPAREIL ET USTENSILES 
+    //RENDER INGREDIENTS, APPLIANCE ET USTENSILS SEARCH INPUT
     renderInputSearch() {
         let inputsContainer = document.getElementById("select-inputs-container");
 
@@ -116,9 +117,9 @@ class View {
 
 
             inputTemplate.innerHTML = `<div class="input-container">
-                                            <input class="inputsSearch" id="input${inputsName[i]}" placeholder="${inputsName[i]}">
+                                            <input class="inputsSearch" id="input-${inputsName[i]}" placeholder="${inputsName[i]}">
                                             <div class="chevrons-container" id="chevrons-container-${inputsName[i]}">
-                                                <img class="chevron-open id="chevron-open-${inputsName[i]}" src="/images/fleche-down-white.png" alt="Open search ${inputsName[i]}">
+                                                <img class="chevron-open" id="chevron-open-${inputsName[i]}" src="/images/fleche-down-white.png" alt="Open search ${inputsName[i]}">
                                                 <img class="chevron-close" id="chevron-close-${inputsName[i]}" src="/images/fleche-up-white.png" alt="Close search ${inputsName[i]}">
                                             </div>
                                         </div>
@@ -139,13 +140,14 @@ class View {
         let chevronsContainer = document.getElementsByClassName("chevrons-container");
         for(let i = 0 ; i < chevronsContainer.length ; i++) {
             chevronsContainer[i].addEventListener('click' , (event) => {
-                this.handleSelect(event, i);
+                let idElement = event.target.parentNode.parentNode.parentNode.id;
+                this.handleSelect(idElement, i);
             }); 
         }
     }
 
 
-     //AFFICHES LES LISTES DES 3 INPUTS DE RECHERCHES
+     //RENDER LISTS OF SEARCH INPUT INGREDIENTS, APPLIANCE AND USTENSILS
      renderListByElement(idElement, listElementsContainer, input) {
    
         if(idElement == "Ingredients") {
@@ -184,42 +186,27 @@ class View {
             }
         }
 
-        //EVENT LISTENER AU CLICK D'UN ITEM DE LA LISTE
+        //EVENT LISTENER ONCLICK OF ITEM'S LIST (INGREDIENT, APPLIANCE AND USTENSILS) CLOSE OTHER LISTS OPENED
         let itemsListClickable = document.getElementsByClassName("item-list-clickable");
         
         for(let i = 0; i < itemsListClickable.length ; i++) {
             itemsListClickable[i].addEventListener('click' , (event) => {
                 this.addSearchTag(event);
-                this.closeListOnClickTag(event)
+                let idElement =  event.target.parentNode.parentNode.parentNode.id;
+                this.closeSelect(idElement);
             }); 
         }
     }
 
-    //FERME LE MENU AU CLICK D'UN ITEM
-    closeListOnClickTag(event) {
+    //CLOSE ITEMS LIST
+    closeSelect(idElement) {
+        let listElementsContainer = document.getElementById("list"+idElement+"Container");
+        listElementsContainer.classList.remove("list-no-flex");
+        let input = document.getElementById("input-"+idElement);
+        let divInputChosen = document.getElementById(idElement);
+        let chevronOpen = document.getElementById("chevron-open-"+idElement);
+        let chevronClose = document.getElementById("chevron-close-"+idElement);
         
-        let elementList = event.target.parentNode.parentNode.parentNode;
-        let idElement = elementList.id;
-       
-        let chevronsContainer = elementList.children[0].children[1];
-        let chevronOpen = chevronsContainer.children[0];
-        let chevronClose = chevronsContainer.children[1];
-        let listElementsId = "list"+ idElement +"Container";
-        let listElementsContainer = document.getElementById(listElementsId);
-
-        let input = elementList.childNodes[0].children[0];
-        
-        chevronOpen.classList.remove("chevron-no-display");
-        chevronClose.classList.remove("chevron-display");
-        elementList.classList.remove("expanded-list");
-        input.classList.remove("input-list-mode");
-        input.placeholder = idElement;
-        listElementsContainer.classList.remove("add-margin-top");
-        listElementsContainer.innerHTML = "";
-    }
-
-
-    closeSelect(chevronOpen, chevronClose, divInputChosen, listElementsContainer, input, idElement) {
         chevronOpen.classList.remove("chevron-no-display");
         chevronClose.classList.remove("chevron-display");
         divInputChosen.classList.remove("expanded-list");
@@ -229,7 +216,15 @@ class View {
         input.placeholder = idElement;
     }
 
-    openSelect(chevronOpen, chevronClose, divInputChosen, listElementsContainer, input, idElement){
+    //OPEN ITEMS LIST
+    openSelect(idElement){
+        let listElementsContainer = document.getElementById("list"+idElement+"Container");
+        listElementsContainer.classList.remove("list-no-flex");
+        let input = document.getElementById("input-"+idElement);
+        let divInputChosen = document.getElementById(idElement);
+        let chevronOpen = document.getElementById("chevron-open-"+idElement);
+        let chevronClose = document.getElementById("chevron-close-"+idElement);
+        
         chevronOpen.classList.add("chevron-no-display");
         chevronClose.classList.add("chevron-display");      
         divInputChosen.classList.add("expanded-list");
@@ -240,30 +235,59 @@ class View {
 
     } 
 
-     //GÈRE L'OUVERTURE ET LA FERMETURE DES INPUTS DE RECHERCHES INGREDIENTS, APPAREILS ET USTENSILES
-     handleSelect(event, i) {
-        let chevronOpen = document.getElementsByClassName("chevron-open")[i];
-        let chevronClose = document.getElementsByClassName("chevron-close")[i];
-        let idElement = event.target.parentNode.parentNode.parentNode.id;
-        let listElementsId = "list"+ idElement +"Container";
-        let listElementsContainer = document.getElementById(listElementsId);
-        listElementsContainer.classList.remove("list-no-flex");
-        let input = event.target.parentNode.parentNode.children[0];
-        let divInputChosen = document.getElementById(idElement);
-
-        //FERME LE MENU SELECT
+     //HANLE OPENING AND CLOSING OF SEARCH INPUTS INGREDIENTS, APPLIANCE AND USTENSILS
+     handleSelect(idElement) {
+        let chevronClose = document.getElementById("chevron-close-"+idElement);
+       
+        //CLOSE LIST VIEW
         if(chevronClose.classList.contains("chevron-display")) {
-           this.closeSelect(chevronOpen, chevronClose, divInputChosen, listElementsContainer, input , idElement)
+           this.closeSelect(idElement);
         }
         
-        //OUVRE LE MENU SELECT
+        //OPEN LIST VIEW AND CLOSE OTHER LISTS
         else {  
-           this.openSelect(chevronOpen, chevronClose, divInputChosen, listElementsContainer, input, idElement)
+            let chevronCloseUstensiles = document.getElementById("chevron-close-Ustensiles");
+            let chevronCloseAppareil = document.getElementById("chevron-close-Appareil");
+            let chevronCloseIngredients = document.getElementById("chevron-close-Ingredients");
+            
+            switch (idElement) {
+                case "Ingredients":
+                    if(chevronCloseUstensiles.classList.contains("chevron-display")) {
+                        this.closeSelect("Ustensiles")
+                    }
+                    if(chevronCloseAppareil.classList.contains("chevron-display")) {
+                        this.closeSelect("Appareil");
+                    }
+                    break;
+                
+                case "Ustensiles":
+                    if(chevronCloseIngredients.classList.contains("chevron-display")) {
+                        this.closeSelect("Ingredients")
+                    }
+                    if(chevronCloseAppareil.classList.contains("chevron-display")) {
+                        this.closeSelect("Appareil");
+                    }
+                    break;
+                
+                case "Appareil":
+                    if(chevronCloseUstensiles.classList.contains("chevron-display")) {
+                        this.closeSelect("Ustensiles")
+                    }
+                    if(chevronCloseIngredients.classList.contains("chevron-display")) {
+                        this.closeSelect("Ingredients");
+                    }
+            
+                    break;
+            }
+           
+           
+            this.openSelect(idElement);
+
         }
     }
   
 
-    //RECHERCHE DE LA LISTE DE MOTS COMPATIBLES AVEC LA VALEUR DE RECHERCHE DANS L'INPUT
+    //RENDER LIST OF AUTOIMPLEMENTED RESULT IN SEARCH INPUT
     searchAutoImplement(event) {
         let currentValue = event.target.value;
         let idElementName = event.target.parentNode.parentNode.id;
@@ -291,9 +315,9 @@ class View {
             let arrayCorrespondances = [];
            
             if(currentValue.length >= 1 ) {
-                //RECHERCHE LES ITEMS DE LA LISTE QUI CORRESPONDENT AVEC LA VALEUR DE RECHERCHE
+                //FIND ITEMS FROM LIST WHICH MATCH WITH VALUE SEARCHED BY USER 
                 array.find(element => {
-                    if (element.toUpperCase().includes(currentValue.toUpperCase())) {
+                    if (element.toLowerCase().includes(currentValue.toLowerCase())) {
                         arrayCorrespondances.push(element);      
                     }
                 });
@@ -302,7 +326,7 @@ class View {
         this.renderListAutoImplement(idElementName,arrayCorrespondances);     
     }
 
-    //AFFICHE LA LISTE DES RECHERCHES CORRESPONDANCES SELON CHAQUE INPUT
+    //RENDER LIST WITH MATCHING RESULTS AUTOIMPLEMENTED CORRESPONDING TO EACH INPUT (INGREDIENTS, APPLIANCE, USTENSILS)
     renderListAutoImplement(idElementName, arrayCorrespondances) {
      
         let idElement = idElementName;
@@ -338,7 +362,7 @@ class View {
         }        
     }
    
-    //AJOUTE UN TAG SELON L'ITEM SELECTIONNÉ PUIS APPEL LA FONCTION DE FILTRE SELON LES ITEMS CHOISIS
+    //ADD SEARCH TAG ACCORDING DIFFERENTS ARRAYS AND CALL THE FUNCTION FILTER BY TAG
     addSearchTag(event) {   
         let idElement = event.target.parentNode.parentNode.parentNode.id;
         let classNamePersonalize = idElement+"ItemTag";
@@ -361,7 +385,7 @@ class View {
             this.filterByTags();
         }
         
-        //AJOUT DE L'EVENLISTENER SI ON SUPPRIME UN TAG QUI APPEL LA FONCTION DELETETAGSELECTED
+        //ADD EVENT LISTENER WHEN DELETING TAG
         let btnsClose = document.getElementsByClassName("icone-delete");
         for(let i = 0; i < btnsClose.length; i ++) {
             btnsClose[i].addEventListener('click', (event) => {
@@ -370,7 +394,7 @@ class View {
         }
     }
 
-    //AJOUT L'ITEM CHOISI DANS L'ARRAY CORRESPONDANTE (INGREDIENTS, APPAREILS ET USTENSILS)
+    //ADD ITEM CHOSEN IN CORRESPONDING ARRAY (USTENSILS SELECTED, APPAREILS SELECTED AND INGREDIENTS SELECTED)
     addSearchTagAndPushInArray(array, tag, tagText, tagsArea, classNamePersonalize) {
         if(!array.includes(tagText)) {
             tag.innerHTML = `${tagText}<img src="images/close.png" alt ="delete" class="icone-delete">`;
@@ -381,7 +405,7 @@ class View {
      
     }
 
-    //SUPPRIMER LE TAG ET APPEL LA FONCTION DE FILTRAGE DES RECETTES
+    //DELETING TAG FUNCTION FROM ARRAY OF ITEMS SELECTED, THEN CALL THE FUNCTION FILTER BY TAGS
     deleteTagSelected(event) {
         let tagText = event.target.parentNode.textContent;
         let className = event.target.parentNode.classList[0];
@@ -416,7 +440,7 @@ class View {
         }
     }
 
-     //AJOUTE EVENTLISTENER À LA BAR DE RECHERCHE PRINCIPALE
+     //ADD EVENT LISTENER TO PRINCIPAL SEARCH BAR 
     addSearchBarEvent() {
         let searchInput = document.getElementById("searchInput");
         searchInput.addEventListener('input' , (event) => {
@@ -426,28 +450,93 @@ class View {
         });
     }
 
-    //FILTRE LES RECETTES SELON LA RECHERCHE PRINCIPALE AU BOUT DE 3 CARACTÈRES
-    searchBarFilter() {
 
-        if(this.arrayUstensilsSelected.length == 0 && this.arrayAppareilsSelected.length == 0 && this.arrayIngredientsSelected == 0) {
+   /*  searchBarFilter() {
+
+        if(this.arrayUstensilsSelected.length == 0 || this.arrayAppareilsSelected.length == 0 || this.arrayIngredientsSelected == 0) {
+            this.arrayRecipesFiltered = [...this.recipesList];
+        }
+        //SI L'UTILISATEUR EFFACE SA RECHECHE, LA RECHERCHE REPREND SUR LES FILTRES SÉLÉCTIONNÉS EN PARTANT DE L'ARRAY INITIALE
+        if(this.currentValueSearchBar.length == 0) {
             this.arrayRecipesFiltered = [...this.recipesList];
             this.filterByTags();
         }
+
+
+        if(this.arrayUstensilsSelected.length > 0 || this.arrayAppareilsSelected.length > 0 || this.arrayIngredientsSelected > 0) {
+            this.arrayRecipesFiltered = [...this.recipesList];
+            this.filterByTags();
+        }
+        
+        //SI LA SAISIE EST SUPÉRIEUR À 3 LETTRES
+
+        if(this.currentValueSearchBar.length >= 3) {
+
+            for (let i = 0 ; i <  this.arrayRecipesFiltered.length; i++) {   
+            
+                let arrIngredient = [];
+                for(let j = 0; j < this.arrayRecipesFiltered[i].ingredients.length ; j++) {
+                    arrIngredient.push(this.arrayRecipesFiltered[i].ingredients[j].ingredient);              
+                }
+
+                //VERIFIE SI LA RECHERCHE CORRESPOND AUX RECETTES PARMIS SES INGRÉDIENTS
+                let isIngredientFound = false;
+                for (let k = 0 ; k < arrIngredient.length; k++) { 
+                    if (arrIngredient[k].substr(0, this.currentValueSearchBar.length).toUpperCase() == this.currentValueSearchBar.toUpperCase()) {     
+                        isIngredientFound = true;       
+                        break;         
+                    }
+                }
+
+                //VÉRIFIE SI LA RECHERCHE CORRESPOND À UN TITRE DE RECETTE
+                let isTitleFound = false;      
+                if (this.arrayRecipesFiltered[i].name.toUpperCase().includes(this.currentValueSearchBar.toUpperCase())) {
+                    isTitleFound = true;  
+                }
+
+                //VÉRIFIE SI LA RECHERCHE CORRESPOND À UNE DESCRIPTION
+                let isDescriptionFound = false;      
+                if (this.arrayRecipesFiltered[i].description.toUpperCase().includes(this.currentValueSearchBar.toUpperCase())) {
+                    isDescriptionFound = true;
+                }
+
+                //SI AUCUNE CORRESPONDANCE N'EST TROUVÉE PARMI LES INGRDIENTS, LE TITRE ET LA DESCRIPTION ON ENLÈVE LA RECETTE DE L'ARRAY
+                if(isIngredientFound == false && isTitleFound == false && isDescriptionFound == false) {
+                    this.arrayRecipesFiltered.splice([i], 1);
+                    i --;
+                }
+            
+            }
+        }
+        console.log(this.arrayRecipesFiltered);
     
-        //SI L'UTILISATEUR EFFACE SA RECHERCHE, LA RECHERCHE REPREND SUR LES FILTRES SÉLÉCTIONNÉS EN PARTANT DE L'ARRAY INITIALE
+        this.renderRecipesCards(this.arrayRecipesFiltered);
+
+    } */
+
+    //FILTER RECIPES FROM PRINCIPAL SEARCH BAR STARTING FROM 3 CHARACTERS
+
+    searchBarFilter() {
+
+        //RESET ALL RECIPES WHEN NO TAG IS SELECTED (IN CASE OF RETAPING SEARCH WITHOUT ALL DELETING IN SEARCH ABR)
+        if(this.arrayUstensilsSelected.length == 0 && this.arrayAppareilsSelected.length == 0 && this.arrayIngredientsSelected == 0) {
+            this.arrayRecipesFiltered = [...this.recipesList];
+        }
+    
+        //RESET ALL RECIPES IF USER DELETE ALL HIS SEARCH, START BY FILTERING BY SELECTED TAGS
         if(this.currentValueSearchBar.length == 0) {
             this.isSearchBarUsed = false;
             this.arrayRecipesFiltered = [...this.recipesList];
             this.filterByTags();
         }
 
-        // IF A TAG IS ALREADY SELECTED
+        // START BY FILTERING BY TAGS IF SOME TAGS ARE ALREADY SELECTED
         if(this.arrayUstensilsSelected.length > 0 || this.arrayAppareilsSelected.length > 0 || this.arrayIngredientsSelected > 0) {
             this.arrayRecipesFiltered = [...this.recipesList];
             this.filterByTags();
         }
         
-        //IF LENGTH OF SEARCH IS LONGER THAN 3
+        //FILTER IF LENGTH OF SEARCH IS LONGER THAN 3
 
         if(this.currentValueSearchBar.length >= 3) {
             let word = this.currentValueSearchBar;
