@@ -61,7 +61,6 @@ class View {
    //RENDER RECIPIES CARDS ON PAGE
     renderRecipesCards(arrayRecipes) {
 
-        
         let cardsContainer = document.getElementById("recipes-cards-container");
         let noMatch = document.getElementById("no-match-message");
         cardsContainer.innerHTML="";
@@ -452,32 +451,33 @@ class View {
             this.isSearchBarUsed = true;
         });
     }
-
   
     //FILTER RECIPES FROM PRINCIPAL SEARCH BAR STARTING FROM 3 CHARACTERS
-
-     searchBarFilter() {
+    searchBarFilter() {
         
+        console.log("enter");
         //RESET ALL RECIPES WHEN NO TAG IS SELECTED (IN CASE OF RETAPING SEARCH WITHOUT ALL DELETING IN SEARCH BAR)
-        if(this.arrayUstensilsSelected.length == 0 || this.arrayAppareilsSelected.length == 0 || this.arrayIngredientsSelected == 0) {
+        if(this.arrayUstensilsSelected.length == 0 && this.arrayAppareilsSelected.length == 0 && this.arrayIngredientsSelected == 0) {
             this.arrayRecipesFiltered = [...this.recipesList];
         }
+    
         //RESET ALL RECIPES IF USER DELETE ALL HIS SEARCH, START BY FILTERING BY SELECTED TAGS
-        if(this.currentValueSearchBar.length == 0) {
+        if(this.currentValueSearchBar.length < 3) {
             this.arrayRecipesFiltered = [...this.recipesList];
             if(this.arrayUstensilsSelected.length > 0 || this.arrayAppareilsSelected.length > 0 || this.arrayIngredientsSelected > 0) {
-                this.filterByTags();
+            this.filterByTags();
             }
         }
-        
-        // START BY FILTERING BY TAGS IF SOME TAGS ARE ALREADY SELECTED
+
+         // START BY FILTERING BY TAGS IF SOME TAGS ARE ALREADY SELECTED
         if(this.arrayUstensilsSelected.length > 0 || this.arrayAppareilsSelected.length > 0 || this.arrayIngredientsSelected > 0) {
             this.arrayRecipesFiltered = [...this.recipesList];
             this.filterByTags();
         }
         
-      //FILTER ARRAY ALREADY FILTERED BY TAG WHEN USER HAS WRITTEN 3 CHARACTERS
+        //FILTER ARRAY ALREADY FILTERED BY TAG WHEN USER HAS WRITTEN 3 CHARACTERS
         if(this.currentValueSearchBar.length >= 3) {
+
             for (let i = 0 ; i <  this.arrayRecipesFiltered.length; i++) {   
                 
                 let isIngredientFound = false;       
@@ -501,17 +501,16 @@ class View {
                 if(isIngredientFound == false && isTitleFound == false && isDescriptionFound == false) {
                     this.arrayRecipesFiltered.splice([i], 1);
                     i --;
-                }
-            
+                }      
             }
-        }
-    
+        }   
+        console.log(this.arrayRecipesFiltered);
         this.renderRecipesCards(this.arrayRecipesFiltered);
     } 
 
     //FILTER RECIPES FROM PRINCIPAL SEARCH BAR STARTING FROM 3 CHARACTERS
-/* 
-    searchBarFilter() {
+
+   /*  searchBarFilter() {
 
         //RESET ALL RECIPES WHEN NO TAG IS SELECTED (IN CASE OF RETAPING SEARCH WITHOUT ALL DELETING IN SEARCH BAR)
         if(this.arrayUstensilsSelected.length == 0 && this.arrayAppareilsSelected.length == 0 && this.arrayIngredientsSelected == 0) {
@@ -540,7 +539,7 @@ class View {
                 return currentElement.name.toLowerCase().includes(word)||
                 currentElement.description.toLowerCase().includes(word)||
                 currentElement.ingredients.find(el => {
-                    return (el.ingredient).toLowerCase().includes(word)   
+                    return (el.ingredient).toLowerCase().includes(word); 
                 });
             });
             
@@ -549,7 +548,7 @@ class View {
 
           }
     }
- */
+  */
 
 
     //FILTER RECIPES BY SELECTED TAGS
@@ -579,9 +578,7 @@ class View {
 
         //FILTER BY APPAREIL
         for (let i = 0 ; i <  this.arrayRecipesFiltered.length; i++) {  
-
             for (let j = 0 ; j < this.arrayAppareilsSelected.length; j++) {  
-
                 if(this.arrayRecipesFiltered[i].appliance != this.arrayAppareilsSelected[j]) {
                     this.arrayRecipesFiltered.splice([i], 1);
                     i--;             
