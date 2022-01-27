@@ -441,60 +441,6 @@ class View {
     }
   
     //FILTER RECIPES FROM PRINCIPAL SEARCH BAR STARTING FROM 3 CHARACTERS
-  /*   searchBarFilter() {
-        //RESET ALL RECIPES WHEN NO TAG IS SELECTED (IN CASE OF RETAPING SEARCH WITHOUT ALL DELETING IN SEARCH BAR)
-        if(this.arrayUstensilsSelected.length == 0 && this.arrayAppareilsSelected.length == 0 && this.arrayIngredientsSelected == 0) {
-            this.arrayRecipesFiltered = [...this.recipesList];
-        }
-    
-        //RESET ALL RECIPES IF USER DELETE ALL HIS SEARCH, START BY FILTERING BY SELECTED TAGS
-        if(this.currentValueSearchBar.length < 3) {
-            this.arrayRecipesFiltered = [...this.recipesList];
-            if(this.arrayUstensilsSelected.length > 0 || this.arrayAppareilsSelected.length > 0 || this.arrayIngredientsSelected > 0) {
-            this.filterByTags();
-            }
-        }
-
-         // START BY FILTERING BY TAGS IF SOME TAGS ARE ALREADY SELECTED
-        if(this.arrayUstensilsSelected.length > 0 || this.arrayAppareilsSelected.length > 0 || this.arrayIngredientsSelected > 0) {
-            this.arrayRecipesFiltered = [...this.recipesList];
-            this.filterByTags();
-        }
-        
-        //FILTER ARRAY ALREADY FILTERED BY TAG WHEN USER HAS WRITTEN 3 CHARACTERS
-        if(this.currentValueSearchBar.length >= 3) {
-
-            for (let i = 0 ; i <  this.arrayRecipesFiltered.length; i++) {   
-                
-                let isIngredientFound = false;       
-                for(let j = 0; j < this.arrayRecipesFiltered[i].ingredients.length ; j++) {
-                    if ( this.arrayRecipesFiltered[i].ingredients[j].ingredient.toLowerCase().includes(this.currentValueSearchBar)) {    
-                        isIngredientFound = true;       
-                        break;                    
-                    }
-                }
-                //CHECK IF RECIPE'S NAME MATCH WITH SEARCH
-                let isTitleFound = false;      
-                if (this.arrayRecipesFiltered[i].name.toLowerCase().includes(this.currentValueSearchBar)) {
-                    isTitleFound = true;  
-                }
-                //CHECK IF RECIPE'S DESCRITPION MATCH WITH SEARCH
-                let isDescriptionFound = false;      
-                if (this.arrayRecipesFiltered[i].description.toLowerCase().includes(this.currentValueSearchBar)) {
-                    isDescriptionFound = true;
-                }
-                //SI AUCUNE CORRESPONDANCE N'EST TROUVÉE PARMI LES INGRDIENTS, LE TITRE ET LA DESCRIPTION ON ENLÈVE LA RECETTE DE L'ARRAY
-                if(isIngredientFound == false && isTitleFound == false && isDescriptionFound == false) {
-                    this.arrayRecipesFiltered.splice([i], 1);
-                    i --;
-                }      
-            }
-        }   
-        console.log(this.arrayRecipesFiltered);
-        this.renderRecipesCards(this.arrayRecipesFiltered);
-    } 
- */
-    //FILTER RECIPES FROM PRINCIPAL SEARCH BAR STARTING FROM 3 CHARACTERS
 
     searchBarFilter() {
 
