@@ -450,11 +450,9 @@ class View {
         }
 
         //RESET ALL RECIPES IF USER DELETE ALL HIS SEARCH, START BY FILTERING BY SELECTED TAGS
-        if(this.currentValueSearchBar.length < 0) {
+        if(this.currentValueSearchBar.length < 3) {
             this.arrayRecipesFiltered = [...this.recipesList];
-            if(this.arrayUstensilsSelected.length > 0 || this.arrayAppareilsSelected.length > 0 || this.arrayIngredientsSelected > 0) {
-                this.filterByTags();
-            }
+            this.filterByTags();
         }
 
         // START BY FILTERING BY TAGS IF SOME TAGS ARE ALREADY SELECTED
@@ -476,8 +474,8 @@ class View {
                 });
             });          
           }
-          console.log(this.arrayRecipesFiltered);
-          this.renderRecipesCards(this.arrayRecipesFiltered);
+        console.log(this.arrayRecipesFiltered);
+        this.renderRecipesCards(this.arrayRecipesFiltered);
     }
 
 
