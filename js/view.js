@@ -114,8 +114,8 @@ class View {
             inputTemplate.innerHTML = `<div class="input-container">
                                             <input class="inputsSearch" id="input-${inputsName[i]}" placeholder="${inputsName[i]}">
                                             <div class="chevrons-container" id="chevrons-container-${inputsName[i]}">
-                                                <img class="chevron-open" id="chevron-open-${inputsName[i]}" src="/images/fleche-down-white.png" alt="Open search ${inputsName[i]}">
-                                                <img class="chevron-close" id="chevron-close-${inputsName[i]}" src="/images/fleche-up-white.png" alt="Close search ${inputsName[i]}">
+                                                <img class="chevron-open" id="chevron-open-${inputsName[i]}" src="images/fleche-down-white.png" alt="Open search ${inputsName[i]}">
+                                                <img class="chevron-close" id="chevron-close-${inputsName[i]}" src="images/fleche-up-white.png" alt="Close search ${inputsName[i]}">
                                             </div>
                                         </div>
                                         <div><ul id="list${inputsName[i]}Container"></ul></div>
