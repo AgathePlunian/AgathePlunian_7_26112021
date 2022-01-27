@@ -18,49 +18,42 @@ class View {
         this.renderInputSearch();
         this.renderRecipesCards(this.recipesList);
         this.addSearchBarEvent()
-   }
+    }
 
   
-
    //FILTER INGREDIENTS, APPLIANCE AND USTENSILS ARRAY BY UNIQ VALUE
-   getClearArrays(arrayRecipesList) {
+    getClearArrays(arrayRecipesList) {
     
-    //CLEAR INGREDIENTS ARRAY
-    let allIngredientsList = [];
-    for(let i = 0; i < arrayRecipesList.length; i++) {
-        let eachArrayOfIngredients = arrayRecipesList[i].ingredients;
-
-        for(let j = 0; j < eachArrayOfIngredients.length ; j ++) {
-            allIngredientsList.push(eachArrayOfIngredients[j].ingredient)
-        }
-    }
-    
-    this.arrayIngredients = [...new Set(allIngredientsList)].sort();
-
-    //CLEAR APPAREILS ARRAY
-    let allAppareilsList = [];
-    for(let i = 0 ; i < arrayRecipesList.length; i++) {
-        allAppareilsList.push(arrayRecipesList[i].appliance);
-    }
-    this.arrayAppareils = [...new Set(allAppareilsList)].sort();
-
-    //CLEAR USTENSILS ARRAY
-    let allUstensilsList = [];
+        //CLEAR INGREDIENTS ARRAY
+        let allIngredientsList = [];
         for(let i = 0; i < arrayRecipesList.length; i++) {
-            let eachArrayOfUstensils = arrayRecipesList[i].ustensils;
-
-            for(let j = 0; j < eachArrayOfUstensils.length ; j ++) {
-                allUstensilsList.push(eachArrayOfUstensils[j]);
+            for(let j = 0; j < arrayRecipesList[i].ingredients.length ; j ++) {
+                allIngredientsList.push(arrayRecipesList[i].ingredients[j].ingredient)
             }
-        }
+        } 
+        this.arrayIngredients = [...new Set(allIngredientsList)].sort();
+
+        //CLEAR APPAREILS ARRAY
+        let allAppareilsList = [];
+        arrayRecipesList.forEach(recipe => {
+            allAppareilsList.push(recipe.appliance);
+        });
+        this.arrayAppareils = [...new Set(allAppareilsList)].sort();
+
+        //CLEAR USTENSILS ARRAY
+        let allUstensilsList = [];
+            for(let i = 0; i < arrayRecipesList.length; i++) {
+                for(let j = 0; j <  arrayRecipesList[i].ustensils.length ; j ++) {
+                    allUstensilsList.push(arrayRecipesList[i].ustensils[j]);
+                }
+            }
         this.arrayUstensils = [...new Set(allUstensilsList)].sort();
 
-}
+    }
 
 
-   //RENDER RECIPIES CARDS ON PAGE
+    //RENDER RECIPIES CARDS ON PAGE
     renderRecipesCards(arrayRecipes) {
-      
         let cardsContainer = document.getElementById("recipes-cards-container");
         let noMatch = document.getElementById("no-match-message");
         cardsContainer.innerHTML="";
@@ -96,27 +89,22 @@ class View {
                         
                     if((!arrayRecipes[i].ingredients[j].unit) && (!arrayRecipes[i].ingredients[j].quantity)) {
                         itemList.innerHTML =  `<p><span class="text-bold">${arrayRecipes[i].ingredients[j].ingredient}</span></p>`;
-                    }
-    
+                    }   
                     else if(!arrayRecipes[i].ingredients[j].unit) {
                         itemList.innerHTML =  `<p><span class="text-bold">${arrayRecipes[i].ingredients[j].ingredient}: </span>${arrayRecipes[i].ingredients[j].quantity}</p>`;
-                    }
-    
+                    }  
                     else {
                         itemList.innerHTML =  `<p><span class="text-bold">${arrayRecipes[i].ingredients[j].ingredient}: </span>${arrayRecipes[i].ingredients[j].quantity} ${arrayRecipes[i].ingredients[j].unit}</p>`;
-                    }
-    
+                    }  
                     cardListIngredients[i].appendChild(itemList);
                 }                               
             }
-        }
-      
+        }     
     }
 
     //RENDER INGREDIENTS, APPLIANCE ET USTENSILS SEARCH INPUT
     renderInputSearch() {
         let inputsContainer = document.getElementById("select-inputs-container");
-
         let inputsName = ["Ingredients", "Appareil", "Ustensiles"];
 
         for(let i = 0 ; i < inputsName.length ; i ++) {
@@ -137,6 +125,7 @@ class View {
 
         }    
 
+        //ADD EVENT LISTENER ON SEARCH BAR OF INPUT
         let inputsList = document.getElementsByClassName("inputsSearch");
         for(let i = 0 ; i < inputsList.length ; i++) {
             inputsList[i].addEventListener('input' , (event) => {
@@ -144,6 +133,7 @@ class View {
             }); 
         }
 
+        //ADD EVENT LISTENER ON ARROW TO OPEN OR CLOSE LISTS
         let chevronsContainer = document.getElementsByClassName("chevrons-container");
         for(let i = 0 ; i < chevronsContainer.length ; i++) {
             chevronsContainer[i].addEventListener('click' , (event) => {
@@ -154,8 +144,8 @@ class View {
     }
 
 
-     //RENDER LISTS OF SEARCH INPUT INGREDIENTS, APPLIANCE AND USTENSILS
-     renderListByElement(idElement, listElementsContainer, input) {
+    //RENDER LISTS OF SEARCH INPUT INGREDIENTS, APPLIANCE AND USTENSILS
+    renderListByElement(idElement, listElementsContainer, input) {
    
         if(idElement == "Ingredients") {
             
@@ -242,8 +232,8 @@ class View {
 
     } 
 
-     //HANLE OPENING AND CLOSING OF SEARCH INPUTS INGREDIENTS, APPLIANCE AND USTENSILS
-     handleSelect(idElement) {
+    //HANLE OPENING AND CLOSING OF SEARCH INPUTS INGREDIENTS, APPLIANCE AND USTENSILS
+    handleSelect(idElement) {
         let chevronClose = document.getElementById("chevron-close-"+idElement);
        
         //CLOSE LIST VIEW
@@ -289,7 +279,6 @@ class View {
            
            
             this.openSelect(idElement);
-
         }
     }
   
@@ -314,7 +303,6 @@ class View {
             this.searchByType(idElementName, this.arrayIngredients, listElementsContainer, currentValue);           
         }
     }
-
 
     searchByType(idElementName, array, listElementsContainer, currentValue) {   
         listElementsContainer.innerHTML = "";          
@@ -422,8 +410,7 @@ class View {
                 this.arrayUstensilsSelected.splice(this.arrayUstensilsSelected.indexOf(tagText), 1);
                 event.target.parentNode.remove();         
                 this.searchBarFilter();
-                this.filterByTags();
-                
+                this.filterByTags();              
             }
         }
 
@@ -455,34 +442,31 @@ class View {
             this.isSearchBarUsed = true;
         });
     }
-
-/*
+  
     //FILTER RECIPES FROM PRINCIPAL SEARCH BAR STARTING FROM 3 CHARACTERS
 
-     searchBarFilter() {
-        
+    searchBarFilter() {
+
         //RESET ALL RECIPES WHEN NO TAG IS SELECTED (IN CASE OF RETAPING SEARCH WITHOUT ALL DELETING IN SEARCH BAR)
-        if(this.arrayUstensilsSelected.length == 0 || this.arrayAppareilsSelected.length == 0 || this.arrayIngredientsSelected == 0) {
+        if(this.arrayUstensilsSelected.length == 0 && this.arrayAppareilsSelected.length == 0 && this.arrayIngredientsSelected == 0) {
             this.arrayRecipesFiltered = [...this.recipesList];
         }
-        
+
         //RESET ALL RECIPES IF USER DELETE ALL HIS SEARCH, START BY FILTERING BY SELECTED TAGS
-        if(this.currentValueSearchBar.length == 0) {
+        if(this.currentValueSearchBar.length < 3) {
             this.arrayRecipesFiltered = [...this.recipesList];
-            if(this.arrayUstensilsSelected.length > 0 || this.arrayAppareilsSelected.length > 0 || this.arrayIngredientsSelected > 0) {
-                this.filterByTags();
-            }
+            this.filterByTags();
         }
-        
+
         // START BY FILTERING BY TAGS IF SOME TAGS ARE ALREADY SELECTED
         if(this.arrayUstensilsSelected.length > 0 || this.arrayAppareilsSelected.length > 0 || this.arrayIngredientsSelected > 0) {
             this.arrayRecipesFiltered = [...this.recipesList];
             this.filterByTags();
         }
         
-      
-      //FILTER ARRAY ALREADY FILTERED BY TAG WHEN USER HAS WRITTEN 3 CHARACTERS
+        //FILTER ARRAY ALREADY FILTERED BY TAG WHEN USER HAS WRITTEN 3 CHARACTERS
         if(this.currentValueSearchBar.length >= 3) {
+
             for (let i = 0 ; i <  this.arrayRecipesFiltered.length; i++) {   
                 
                 let isIngredientFound = false;       
@@ -506,59 +490,12 @@ class View {
                 if(isIngredientFound == false && isTitleFound == false && isDescriptionFound == false) {
                     this.arrayRecipesFiltered.splice([i], 1);
                     i --;
-                }
-            
+                }      
             }
-        }
+        }   
         console.log(this.arrayRecipesFiltered);
-    
         this.renderRecipesCards(this.arrayRecipesFiltered);
-
-    } */
-
-
-    // SECOND IMPLEMENTATION -> FASTER
-
-    //FILTER RECIPES FROM PRINCIPAL SEARCH BAR STARTING FROM 3 CHARACTERS
-    
-    searchBarFilter() {
-
-        //RESET ALL RECIPES WHEN NO TAG IS SELECTED (IN CASE OF RETAPING SEARCH WITHOUT ALL DELETING IN SEARCH BAR)
-        if(this.arrayUstensilsSelected.length == 0 && this.arrayAppareilsSelected.length == 0 && this.arrayIngredientsSelected == 0) {
-            this.arrayRecipesFiltered = [...this.recipesList];
-        }
-    
-        //RESET ALL RECIPES IF USER DELETE ALL HIS SEARCH, START BY FILTERING BY SELECTED TAGS
-        if(this.currentValueSearchBar.length == 0) {
-            this.isSearchBarUsed = false;
-            this.arrayRecipesFiltered = [...this.recipesList];
-            this.filterByTags();
-        }
-
-        // START BY FILTERING BY TAGS IF SOME TAGS ARE ALREADY SELECTED
-        if(this.arrayUstensilsSelected.length > 0 || this.arrayAppareilsSelected.length > 0 || this.arrayIngredientsSelected > 0) {
-            this.arrayRecipesFiltered = [...this.recipesList];
-            this.filterByTags();
-        }
-        
-        //FILTER IF LENGTH OF SEARCH IS LONGER THAN 3
-
-        if(this.currentValueSearchBar.length >= 3) {
-            let word = this.currentValueSearchBar;
-            console.log(word);
-            this.arrayRecipesFiltered = this.arrayRecipesFiltered.filter(function(currentElement) {
-                return currentElement.name.toLowerCase().includes(word)||
-                currentElement.description.toLowerCase().includes(word)||
-                currentElement.ingredients.find(el => {
-                    return (el.ingredient).toLowerCase().includes(word)   
-                });
-            });
-            
-            console.log(this.arrayRecipesFiltered);
-            this.renderRecipesCards(this.arrayRecipesFiltered);
-
-          }
-    }
+    } 
 
 
 
@@ -573,13 +510,11 @@ class View {
                 arrIngredient.push(this.arrayRecipesFiltered[i].ingredients[j].ingredient);              
             }
 
-            for (let k = 0 ; k < this.arrayIngredientsSelected.length; k++) { 
-            
+            for (let k = 0 ; k < this.arrayIngredientsSelected.length; k++) {    
                 if(!arrIngredient.includes(this.arrayIngredientsSelected[k])) {
                     isFound = false;
                     break;                    
                 }
-
             }
             if(isFound == false) {
                 this.arrayRecipesFiltered.splice([i], 1);
@@ -589,9 +524,7 @@ class View {
 
         //FILTER BY APPAREIL
         for (let i = 0 ; i <  this.arrayRecipesFiltered.length; i++) {  
-
             for (let j = 0 ; j < this.arrayAppareilsSelected.length; j++) {  
-
                 if(this.arrayRecipesFiltered[i].appliance != this.arrayAppareilsSelected[j]) {
                     this.arrayRecipesFiltered.splice([i], 1);
                     i--;             
