@@ -286,7 +286,7 @@ class View {
         let listElementsId = "list"+ idElementName +"Container";
         let listElementsContainer = document.getElementById(listElementsId);
         let divExpanded = document.getElementById(idElementName);
-        divExpanded.classList.remove("expanded-list");
+       // divExpanded.classList.remove("expanded-list");
 
         if (idElementName == "Ustensiles") {             
             this.searchByType(idElementName, this.arrayUstensils, listElementsContainer, currentValue);
@@ -347,7 +347,10 @@ class View {
         let itemsListClickable = document.getElementsByClassName("item-list-clickable");
         for(let i = 0; i < itemsListClickable.length ; i++) {
             itemsListClickable[i].addEventListener('click' , (event) => {
+                let idElement =  event.target.parentNode.parentNode.parentNode.id;    
                 this.addSearchTag(event);
+                this.closeSelect(idElement);
+               
                 
             }); 
         }        
