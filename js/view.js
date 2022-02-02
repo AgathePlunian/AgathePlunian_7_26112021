@@ -349,9 +349,7 @@ class View {
             itemsListClickable[i].addEventListener('click' , (event) => {
                 let idElement =  event.target.parentNode.parentNode.parentNode.id;    
                 this.addSearchTag(event);
-                this.closeSelect(idElement);
-               
-                
+                this.closeSelect(idElement);              
             }); 
         }        
     }
@@ -446,8 +444,14 @@ class View {
     //FILTER RECIPES FROM PRINCIPAL SEARCH BAR STARTING FROM 3 CHARACTERS
 
     searchBarFilter() {
+        this.arrayRecipesFiltered = [...this.recipesList];
+        if(this.arrayUstensilsSelected.length > 0 || this.arrayAppareilsSelected.length > 0 || this.arrayIngredientsSelected.length > 0) {
+            console.log("yes")
+            this.arrayRecipesFiltered = [...this.recipesList];
+            this.filterByTags();
+        } 
 
-        //RESET ALL RECIPES WHEN NO TAG IS SELECTED (IN CASE OF RETAPING SEARCH WITHOUT ALL DELETING IN SEARCH BAR)
+       /*  //RESET ALL RECIPES WHEN NO TAG IS SELECTED (IN CASE OF RETAPING SEARCH WITHOUT ALL DELETING IN SEARCH BAR)
         if(this.arrayUstensilsSelected.length == 0 && this.arrayAppareilsSelected.length == 0 && this.arrayIngredientsSelected == 0) {
             this.arrayRecipesFiltered = [...this.recipesList];
         }
@@ -458,11 +462,11 @@ class View {
             this.filterByTags();
         }
 
-        // START BY FILTERING BY TAGS IF SOME TAGS ARE ALREADY SELECTED
+         // START BY FILTERING BY TAGS IF SOME TAGS ARE ALREADY SELECTED
         if(this.arrayUstensilsSelected.length > 0 || this.arrayAppareilsSelected.length > 0 || this.arrayIngredientsSelected > 0) {
             this.arrayRecipesFiltered = [...this.recipesList];
             this.filterByTags();
-        }
+        }  */
         
         //FILTER IF LENGTH OF SEARCH IS LONGER THAN 3
 
