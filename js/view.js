@@ -446,28 +446,9 @@ class View {
     searchBarFilter() {
         this.arrayRecipesFiltered = [...this.recipesList];
         if(this.arrayUstensilsSelected.length > 0 || this.arrayAppareilsSelected.length > 0 || this.arrayIngredientsSelected.length > 0) {
-            console.log("yes")
-            this.arrayRecipesFiltered = [...this.recipesList];
             this.filterByTags();
         } 
-
-       /*  //RESET ALL RECIPES WHEN NO TAG IS SELECTED (IN CASE OF RETAPING SEARCH WITHOUT ALL DELETING IN SEARCH BAR)
-        if(this.arrayUstensilsSelected.length == 0 && this.arrayAppareilsSelected.length == 0 && this.arrayIngredientsSelected == 0) {
-            this.arrayRecipesFiltered = [...this.recipesList];
-        }
-
-        //RESET ALL RECIPES IF USER DELETE ALL HIS SEARCH, START BY FILTERING BY SELECTED TAGS
-        if(this.currentValueSearchBar.length < 3) {
-            this.arrayRecipesFiltered = [...this.recipesList];
-            this.filterByTags();
-        }
-
-         // START BY FILTERING BY TAGS IF SOME TAGS ARE ALREADY SELECTED
-        if(this.arrayUstensilsSelected.length > 0 || this.arrayAppareilsSelected.length > 0 || this.arrayIngredientsSelected > 0) {
-            this.arrayRecipesFiltered = [...this.recipesList];
-            this.filterByTags();
-        }  */
-        
+ 
         //FILTER IF LENGTH OF SEARCH IS LONGER THAN 3
 
         if(this.currentValueSearchBar.length >= 3) {
