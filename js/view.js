@@ -441,10 +441,12 @@ class View {
         });
     }
   
-    //FILTER RECIPES FROM PRINCIPAL SEARCH BAR STARTING FROM 3 CHARACTERS
-
+    //FILTER BY SEARCH BAR VALUE
     searchBarFilter() {
+        //REINITIALIZE ARRAY OF RECIPES
         this.arrayRecipesFiltered = [...this.recipesList];
+
+        //FILTER BY TAG IF TAG(S) ALREADY SELECTED
         if(this.arrayUstensilsSelected.length > 0 || this.arrayAppareilsSelected.length > 0 || this.arrayIngredientsSelected.length > 0) {
             this.filterByTags();
         } 
