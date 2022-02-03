@@ -13,7 +13,7 @@ class View {
         this.currentValueSearchBar = "";
     }
 
-    showIndex() {
+    renderIndex() {
         this.getClearArrays(this.arrayRecipesFiltered);
         this.renderInputSearch();
         this.renderRecipesCards(this.recipesList);
@@ -50,7 +50,6 @@ class View {
         this.arrayUstensils = [...new Set(allUstensilsList)].sort();
 
     }
-
 
     //RENDER RECIPIES CARDS ON PAGE
     renderRecipesCards(arrayRecipes) {
@@ -124,7 +123,7 @@ class View {
             inputsContainer.appendChild(inputTemplate);
         }    
 
-        //ADD EVENT LISTENER ON SEARCH BAR OF INPUT
+        //ADD EVENT LISTENER ON SEARCH BAR OF INPUTS INGREDIENT, APPAREILS, USTENSILS
         let inputsList = document.getElementsByClassName("inputsSearch");
         for(let i = 0 ; i < inputsList.length ; i++) {
             inputsList[i].addEventListener('input' , (event) => {
@@ -141,95 +140,6 @@ class View {
             }); 
         }
     }
-
-
-    //RENDER LISTS OF SEARCH INPUT INGREDIENTS, APPLIANCE AND USTENSILS
-    renderListByElement(idElement, listElementsContainer, input) {
-   
-        if(idElement == "Ingredients") {
-            
-            input.placeholder = "Recherche un ingredient";    
-           
-            for (let i = 0; i < this.arrayIngredients.length ; i++) {
-                let itemList = document.createElement('li');
-                itemList.classList.add("item-list-clickable");
-                itemList.innerHTML = this.arrayIngredients[i];
-                listElementsContainer.appendChild(itemList);
-            }
-        }
-
-        if(idElement == "Appareil") {
-
-            input.placeholder = "Recherche un appareil";    
-           
-            for (let i = 0; i < this.arrayAppareils.length ; i++) {
-                let itemList = document.createElement('li');
-                itemList.classList.add("item-list-clickable");
-                itemList.innerHTML = this.arrayAppareils[i];
-                listElementsContainer.appendChild(itemList);
-            }
-        }
-
-        if(idElement == "Ustensiles") {
-
-            input.placeholder = "Recherche un ustensile";    
-            
-            for (let i = 0; i < this.arrayUstensils.length ; i++) {
-                let itemList = document.createElement('li');
-                itemList.classList.add("item-list-clickable")
-                itemList.innerHTML = this.arrayUstensils[i];
-                listElementsContainer.appendChild(itemList);
-            }
-        }
-
-        //EVENT LISTENER ONCLICK OF ITEM'S LIST (INGREDIENT, APPLIANCE AND USTENSILS) CLOSE OTHER LISTS OPENED
-        let itemsListClickable = document.getElementsByClassName("item-list-clickable");
-        
-        for(let i = 0; i < itemsListClickable.length ; i++) {
-            itemsListClickable[i].addEventListener('click' , (event) => {
-                this.addSearchTag(event);
-                let idElement =  event.target.parentNode.parentNode.parentNode.id;
-                this.closeSelect(idElement);
-            }); 
-        }
-    }
-
-    //CLOSE ITEMS LIST
-    closeSelect(idElement) {
-        let listElementsContainer = document.getElementById("list"+idElement+"Container");
-        listElementsContainer.classList.remove("list-no-flex");
-        let input = document.getElementById("input-"+idElement);
-        let divInputChosen = document.getElementById(idElement);
-        let chevronOpen = document.getElementById("chevron-open-"+idElement);
-        let chevronClose = document.getElementById("chevron-close-"+idElement);
-        
-        chevronOpen.classList.remove("chevron-no-display");
-        chevronClose.classList.remove("chevron-display");
-        divInputChosen.classList.remove("expanded-list");
-        listElementsContainer.classList.remove("add-margin-top");
-        listElementsContainer.innerHTML = "";
-        input.classList.remove("input-list-mode");
-        input.placeholder = idElement;
-    }
-
-    //OPEN ITEMS LIST
-    openSelect(idElement){
-        let listElementsContainer = document.getElementById("list"+idElement+"Container");
-        listElementsContainer.classList.remove("list-no-flex");
-        let input = document.getElementById("input-"+idElement);
-        let divInputChosen = document.getElementById(idElement);
-        let chevronOpen = document.getElementById("chevron-open-"+idElement);
-        let chevronClose = document.getElementById("chevron-close-"+idElement);
-        
-        chevronOpen.classList.add("chevron-no-display");
-        chevronClose.classList.add("chevron-display");      
-        divInputChosen.classList.add("expanded-list");
-        listElementsContainer.classList.add("add-margin-top");
-        input.classList.add("input-list-mode"); 
-        this.getClearArrays(this.arrayRecipesFiltered);     
-        this.renderListByElement(idElement, listElementsContainer, input);
-
-    } 
 
     //HANLE OPENING AND CLOSING OF SEARCH INPUTS INGREDIENTS, APPLIANCE AND USTENSILS
     handleSelect(idElement) {
@@ -278,8 +188,96 @@ class View {
             this.openSelect(idElement);
         }
     }
+
+    //CLOSE ITEMS LIST
+    closeSelect(idElement) {
+        let listElementsContainer = document.getElementById("list"+idElement+"Container");
+        listElementsContainer.classList.remove("list-no-flex");
+        let input = document.getElementById("input-"+idElement);
+        let divInputChosen = document.getElementById(idElement);
+        let chevronOpen = document.getElementById("chevron-open-"+idElement);
+        let chevronClose = document.getElementById("chevron-close-"+idElement);
+        
+        chevronOpen.classList.remove("chevron-no-display");
+        chevronClose.classList.remove("chevron-display");
+        divInputChosen.classList.remove("expanded-list");
+        listElementsContainer.classList.remove("add-margin-top");
+        listElementsContainer.innerHTML = "";
+        input.classList.remove("input-list-mode");
+        input.placeholder = idElement;
+    }
+
+    //OPEN ITEMS LIST
+    openSelect(idElement){
+        let listElementsContainer = document.getElementById("list"+idElement+"Container");
+        listElementsContainer.classList.remove("list-no-flex");
+        let input = document.getElementById("input-"+idElement);
+        let divInputChosen = document.getElementById(idElement);
+        let chevronOpen = document.getElementById("chevron-open-"+idElement);
+        let chevronClose = document.getElementById("chevron-close-"+idElement);
+        
+        chevronOpen.classList.add("chevron-no-display");
+        chevronClose.classList.add("chevron-display");      
+        divInputChosen.classList.add("expanded-list");
+        listElementsContainer.classList.add("add-margin-top");
+        input.classList.add("input-list-mode"); 
+        this.getClearArrays(this.arrayRecipesFiltered);     
+        this.renderListByElement(idElement, listElementsContainer, input);
+
+    } 
+
+    //RENDER LISTS OF SEARCH INPUT INGREDIENTS, APPLIANCE AND USTENSILS
+    renderListByElement(idElement, listElementsContainer, input) {
+   
+        if(idElement == "Ingredients") {
+            
+            input.placeholder = "Recherche un ingredient";    
+           
+            for (let i = 0; i < this.arrayIngredients.length ; i++) {
+                let itemList = document.createElement('li');
+                itemList.classList.add("item-list-clickable");
+                itemList.innerHTML = this.arrayIngredients[i];
+                listElementsContainer.appendChild(itemList);
+            }
+        }
+
+        if(idElement == "Appareil") {
+
+            input.placeholder = "Recherche un appareil";    
+           
+            for (let i = 0; i < this.arrayAppareils.length ; i++) {
+                let itemList = document.createElement('li');
+                itemList.classList.add("item-list-clickable");
+                itemList.innerHTML = this.arrayAppareils[i];
+                listElementsContainer.appendChild(itemList);
+            }
+        }
+
+        if(idElement == "Ustensiles") {
+
+            input.placeholder = "Recherche un ustensile";    
+            
+            for (let i = 0; i < this.arrayUstensils.length ; i++) {
+                let itemList = document.createElement('li');
+                itemList.classList.add("item-list-clickable")
+                itemList.innerHTML = this.arrayUstensils[i];
+                listElementsContainer.appendChild(itemList);
+            }
+        }
+
+        //EVENT LISTENER ONCLICK OF ITEM'S LIST (INGREDIENT, APPLIANCE AND USTENSILS) CLOSE OTHER LISTS OPENED
+        let itemsListClickable = document.getElementsByClassName("item-list-clickable");
+        
+        for(let i = 0; i < itemsListClickable.length ; i++) {
+            itemsListClickable[i].addEventListener('click' , (event) => {
+                this.addSearchTag(event);
+                let idElement = event.target.parentNode.parentNode.parentNode.id;
+                this.closeSelect(idElement);
+            }); 
+        }
+    }
   
-    //RENDER LIST OF AUTOIMPLEMENTED RESULT IN SEARCH INPUT
+    //IDENTIFY IN WHICH INPUT THE SEARCH IN MADE
     searchAutoImplement(event) {
         let currentValue = event.target.value;
         let idElementName = event.target.parentNode.parentNode.id;
@@ -301,12 +299,12 @@ class View {
         }
     }
 
+     //FIND ITEMS FROM LIST WHICH MATCH WITH VALUE SEARCHED BY USER 
     searchByType(idElementName, array, listElementsContainer, currentValue) {   
         listElementsContainer.innerHTML = "";          
             let arrayCorrespondances = [];
            
             if(currentValue.length >= 1 ) {
-                //FIND ITEMS FROM LIST WHICH MATCH WITH VALUE SEARCHED BY USER 
                 array.find(element => {
                     if (element.toLowerCase().includes(currentValue.toLowerCase())) {
                         arrayCorrespondances.push(element);      
@@ -394,7 +392,6 @@ class View {
             tagsArea.appendChild(tag);
             array.push(tagText);
         }    
-     
     }
 
     //DELETING TAG FUNCTION FROM ARRAY OF ITEMS SELECTED, THEN CALL THE FUNCTION FILTER BY TAGS
@@ -437,7 +434,6 @@ class View {
         searchInput.addEventListener('input' , (event) => {
             this.currentValueSearchBar = event.target.value.toLowerCase();
             this.searchBarFilter();
-            this.isSearchBarUsed = true;
         });
     }
   
@@ -455,7 +451,6 @@ class View {
 
         if(this.currentValueSearchBar.length >= 3) {
             let word = this.currentValueSearchBar;
-            console.log(word);
             this.arrayRecipesFiltered = this.arrayRecipesFiltered.filter(function(currentElement) {
                 return currentElement.name.toLowerCase().includes(word)||
                 currentElement.description.toLowerCase().includes(word)||
@@ -463,17 +458,15 @@ class View {
                     return (el.ingredient).toLowerCase().includes(word); 
                 });
             });          
-          }
-        console.log(this.arrayRecipesFiltered);
+        }
         this.renderRecipesCards(this.arrayRecipesFiltered);
     }
-
 
     //FILTER RECIPES BY SELECTED TAGS
     filterByTags() {
       
         //FILTER BY INGREDIENTS
-        for (let i = 0 ; i <  this.arrayRecipesFiltered.length; i++) {   
+        for (let i = 0 ; i < this.arrayRecipesFiltered.length; i++) {   
             let isFound = true;
             let arrIngredient = [];
             for(let j = 0; j < this.arrayRecipesFiltered[i].ingredients.length ; j++) {
@@ -516,8 +509,6 @@ class View {
                 i--;
             }           
         }
-        console.log(this.arrayRecipesFiltered.length);
-        this.renderRecipesCards(this.arrayRecipesFiltered);
-        
+        this.renderRecipesCards(this.arrayRecipesFiltered);   
     }  
 }
